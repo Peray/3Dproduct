@@ -1,0 +1,124 @@
+$(window).load(function() {
+	getdata(1,true);
+});
+var rp = 10;
+//加载管理信息
+function getdata(page,b){
+	$.ajax({
+		type:'post',
+		url: 'glAdmin!execute.action',
+		dataType: 'json',
+		data: { statr: page,rp:rp},
+		success:function(ret){
+			ret = eval(ret);
+			var div = "";
+			totalitems = ret.num;
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i].fbTime.time);
+							Y = date.getFullYear() + '-';
+							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							D = date.getDate();
+					div += '<tr>'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+ret.list[i].glName+'</td>'+
+								'<td><a href="'+ret.list[i].address+'" target="_blank" >'+ret.list[i].address+'</a></td>'+
+								'<td>'+ret.list[i].content+'</td>'+
+								'<td>'+Y+M+D+'</td>'+
+								'<td>'+ret.list[i].fbPop+'</td>'+
+								'<td>'+
+									'<button class="am-btn am-btn-success am-radius am-btn-xs" onClick="lookUp('+ret.list[i].glId+');">查看</button>　'+
+									'<button class="am-btn am-btn-primary am-radius am-btn-xs" onClick="edit('+ret.list[i].glId+');">编辑</button>　'+
+									'<button class="am-btn am-btn-danger am-radius am-btn-xs" onClick="deletesc('+ret.list[i].glId+');">删除</button>'+
+								'</td>'+
+							'</tr>'
+				}
+			}
+			$(".neirong").html(div);
+			if(b){
+				initPage(totalitems);
+			}
+			
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};
+//
+//分页
+function initPage(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+				if(num!=1){
+					getdata(num,false);
+				}if(num == 1){
+					getdata(1,false);
+				}
+			}
+		});
+	}
+}
+
+//查看方法
+function lookUp(id){
+	$.ajax({
+		type:'post',
+		url: 'glAdmin!detail.action',
+		dataType: 'json',
+		data:{glId:id},
+		success:function(ret){
+			ret = eval(ret);
+			//待补充页面
+		}
+	})
+}
+
+//编辑方法
+function edit(id){
+	$.ajax({
+		type:'post',
+		url: 'glAdmin!detail.action',
+		dataType: 'json',
+		data:{glId:id},
+		success:function(ret){
+			ret = eval(ret);
+			//待补充页面
+		}
+	})
+}
+
+//删除方法
+function deletesc(id){
+	if(confirm("确认删除吗")){
+		$.ajax({
+	        type: "post",
+	        url: "glAdmin!delete.action", //url, //
+	        data: {"glId":id},
+	        dataType: "text",
+	        success: function (ret) {
+	 			var data = JSON.stringify(ret);
+	 			alert("删除成功");
+	 			location.href=location.href;
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+	   //window.location.reload();
+	  }else{
+		  //alert("no")
+		return;
+	  }
+}

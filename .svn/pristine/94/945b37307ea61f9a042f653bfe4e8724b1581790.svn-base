@@ -1,0 +1,35 @@
+'use strict';
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-21 16:40:47
+ * @version $Id$
+ */
+
+
+var $list_li  = $(".list-item li");
+
+$list_li.click(function() {
+	
+	$(this).addClass('active').siblings("li").removeClass('active');
+
+});
+
+
+function xila(id){
+
+	if($(".fh"+id).text() == "∨"){
+
+		$(".fh"+id).siblings("ul").children('li').not(".show").show();
+
+		$(".fh"+id).text("∧");
+
+	}else if($(".fh"+id).text() == "∧"){
+
+		$(".fh"+id).siblings("ul").children('li').not(".show").hide();
+
+		$(".fh"+id).text("∨");
+		
+	}
+}
+

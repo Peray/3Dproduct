@@ -1,0 +1,29 @@
+<!doctype html>
+<html class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>运维管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+	
+
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	<!--[if (gte IE 9)|!(IE)]><!-->
+		<script src="js/jquery-1.8.1.min.js"></script>
+	<!--<![endif]-->
+	<script src="js/amazeui.min.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>

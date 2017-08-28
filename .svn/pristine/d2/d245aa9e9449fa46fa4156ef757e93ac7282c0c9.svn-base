@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="myServiceMap">
+    
+    <typeAlias alias="myService" type="com.eastdawn.po.MyService"/>
+    
+    <resultMap id="myService-resultMap" class="myService" >
+    	<result property="serviceId" column="Service_Id"/>
+		<result property="serviceNumber" column="service_Number"/>
+		<result property="serviceName" column="service_Name"/>
+		<result property="time" column="time"/>
+		<result property="userId" column="user_Id"/>
+		<result property="parentId" column="parent_Id"/>
+    </resultMap>
+    <select id="queryMSByPage"  resultMap="myService-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_myservice
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="serviceId"> 
+  				and service_Id = #serviceId#
+  			</isNotEmpty>
+  			<isNotEmpty property="serviceName"> 
+  				and service_Name = #serviceName#
+  			</isNotEmpty>
+        </dynamic>
+         order by service_Id desc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="getMSCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_myservice
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotEmpty property="serviceId"> 
+	  				and service_Id = #serviceId#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="serviceName"> 
+	  				and service_Name = #serviceName#
+	  			</isNotEmpty>
+			</dynamic>
+ 	 </select>
+ 	
+ 	 <!-- 服务添加 -->
+     <insert id="add" parameterClass="myService"> 
+	 	insert into tb_myservice(service_Number,service_Name,time,user_Id,parent_Id) values (#serviceNumber#,#serviceName#,#time#,#userId#,#parentId#)
+ 	 </insert>
+ 	  <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_myservice where service_Id=#serviceId#
+ 	 </delete>
+</sqlMap>

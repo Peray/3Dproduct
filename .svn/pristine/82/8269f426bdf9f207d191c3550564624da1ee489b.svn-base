@@ -1,0 +1,147 @@
+$(window).load(function() {
+	getdata(1,true);
+});
+var rp = 10;
+//加载管理信息
+function getdata(page,b){
+	$.ajax({
+		type:'post',
+		url: 'userAdmin!execute.action',
+		dataType: 'json',
+		data: { "statr": page},
+		success:function(ret){
+			ret = eval(ret);
+			var div = "";
+			totalitems = ret.num;
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="6">没有查询到相关数据！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i].addTime.time);
+							Y = date.getFullYear() + '-';
+							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							D = date.getDate();
+					div += '<tr>'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+ret.list[i].logName+'</td>'+
+								'<td>'+ret.list[i].department+'</td>';
+								if(ret.list[i].level == 1){
+									div += '<td>普通用户</td>';
+								}else if(ret.list[i].level == 2){
+									div += '<td>高级用户</td>';
+								}else{
+									div += '<td>管理员</td>';
+								}
+								if(ret.list[i].status == 2){
+									div += '<td>已注销</td>';
+								}else{
+									div += '<td>正常</td>';
+								}
+								div += '<td>'+Y+M+D+'</td>'+
+								'<td class="am-text-center">';
+								if(ret.list[i].level == 1){
+								div += '<button class="am-btn am-btn-primary am-radius am-btn-xs"  onClick="shenhe('+ret.list[i].userId+');">审核</button>';
+								}
+								if(ret.list[i].level != 3 && ret.list[i].level != 1 && ret.list[i].status != 2){
+								div += '<button class="am-btn am-btn-danger am-radius am-btn-xs"  onClick="zhuxiao('+ret.list[i].userId+',2);">注销</button>';
+								}
+								if(ret.list[i].level != 3 && ret.list[i].status == 2){
+								div += '<button class="am-btn am-btn-success am-radius am-btn-xs"  onClick="zhuxiao('+ret.list[i].userId+',1);">激活</button>';
+								}
+								div += '</td></tr>'
+				}
+			}
+			$(".neirong").html(div);
+			$("#myTable5").trigger("update");
+			
+			if(b){
+				initPage(totalitems);
+			}
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};
+
+//分页
+function initPage(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+				getdata(num,false);
+			}
+		});
+	}
+}
+
+
+//用户审核
+function shenhe(id){
+		$.ajax({
+	        type: "post",
+	        url: "userAdmin!updataLevel.action", //url, //
+	        data: {"userId":id},
+	        dataType: "json",
+	        success: function (ret) {
+	 			ret = eval(ret);
+	 			if(ret == 1){
+	 					location.href=location.href;
+	 			}
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+}
+
+//用户注销
+function zhuxiao(id,zt){
+		$.ajax({
+	        type: "post",
+	        url: "userAdmin!deleteupdate.action", //url, //
+	        data: {"userId":id,"status":zt},
+	        dataType: "json",
+	        success: function (ret) {
+	 			ret = eval(ret);
+	 			if(ret == 1){
+	 					location.href=location.href;
+	 			}
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+}
+
+//删除方法
+function deletesc(id){
+	if(confirm("确认删除吗")){
+		$.ajax({
+	        type: "post",
+	        url: "glAdmin!delete.action", //url, //
+	        data: {"glId":id},
+	        dataType: "text",
+	        success: function (ret) {
+	 			var data = JSON.stringify(ret);
+	 			alert("删除成功");
+	 			location.href=location.href;
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+	   //window.location.reload();
+	  }else{
+		  //alert("no")
+		return;
+	  }
+}

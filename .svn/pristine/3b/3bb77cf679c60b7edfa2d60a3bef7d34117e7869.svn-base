@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts> 
+	<constant name="struts.i18n.encoding" value="UTF-8"/>
+	
+	<package name="user" extends="struts-default" namespace="/">
+	
+		<interceptors>
+			<interceptor name="debugInterceptor" class="com.eastdawn.common.DebugInterceptor"/>
+			<interceptor name="userInterceptor" class="com.eastdawn.common.UserSessionInterceptor"/>
+		</interceptors>
+	
+		<global-results>
+			<result name="userLogon" type="redirect">/login.html</result>
+		</global-results>
+		
+		<action name="logon"  class="com.eastdawn.action.UserLogAction" method="logon">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<!-- interceptor-ref name="tokenSession"></interceptor-ref-->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="invalid.token" type="redirect">/login.html</result>
+			<result name="success" type="redirectAction">first!execute.action</result>
+			<result name="input">/logon.jsp</result>
+			<result name="password">/password.jsp</result>
+		    <result name="myself">/myself.jsp</result>
+		</action>
+		
+		<action name="logout"  class="com.eastdawn.action.UserLogAction" method="logout">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="first"  class="com.eastdawn.action.FirstAction" >
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="success" type="dispatcher">/index.html</result>
+		</action>
+		
+		<action name="userLogin" class="com.eastdawn.action.UserLoginAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="ykdl" class="com.eastdawn.action.YkdlAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="logs" class="com.eastdawn.action.LogsAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="gl" class="com.eastdawn.action.ServiceGlAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="category" class="com.eastdawn.action.CategoryAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="session" class="com.eastdawn.action.SessionAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="myService" class="com.eastdawn.action.MyServiceAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+	</package>
+</struts>    

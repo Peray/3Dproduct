@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>三维空间信息系统</title>
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/frame.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/banner.css" />
+	<script>
+		(function(w){if(!("WebSocket"in w&&2===w.WebSocket.CLOSING)){var d=document.createElement("div");d.className="browsehappy";d.innerHTML='<div style="width:100%;height:70px;font-size:20px;line-height:70px;text-align:center;background-color:#E90D24;color:#fff;margin-bottom:40px;">\u4f60\u7684\u6d4f\u89c8\u5668\u5b9e\u5728<strong>\u592a\u592a\u65e7\u4e86</strong>\uff0c\u592a\u592a\u65e7\u4e86 <a target="_blank" href="http://browsehappy.osfipin.com/" style="background-color:#31b0d5;border-color: #269abc;text-decoration: none;padding: 6px 12px;background-image: none;border: 1px solid transparent;border-radius: 4px;color:#FFEB3B;">\u7acb\u5373\u5347\u7ea7</a></div>';var f=function(){var s=document.getElementsByTagName("body")[0];if("undefined"==typeof(s)){setTimeout(f,10)}else{s.insertBefore(d,s.firstChild)}};f()}}(window));
+	</script>
+	<script language="JavaScript"> 
+		if (window != top){ 
+			top.location.href = location.href;
+		}
+	</script>
+	<style>
+		.sign-in>span, 
+		.sign-in>a {
+			color: #115a9f;
+		}
+	</style>
+</head>
+<body>
+	<div class="tips">
+		<p>建议使用谷歌、火狐、safari等主流浏览器，不推荐使用IE浏览器。</p>
+		<span></span>
+	</div>
+	<header>
+		<div>
+			<img class="logo" src="img/banner/logo1.png" alt="">
+			<div class="sign-in"></div>
+		</div>	
+	</header>
+	<article>
+		<div class="out">
+			<ul class="tu">
+				<li><a href="javascript:void(0);"><img src="img/banner/bg4.png" /></a></li>
+				<li><a href="javascript:void(0);"><img src="img/banner/bg5.png" /></a></li>
+				<li><a href="javascript:void(0);"><img src="img/banner/bg6.png" /></a></li>
+			</ul>
+			<ul class="shu">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+			<div class="search clearfix" id="inputSearch"></div>
+		</div>
+	</article>
+	<section style="text-align:center;">
+		<ul class="clearfix saw" id="typeMenu"></ul>
+	</section>
+	<footer>
+		<div class="footer">
+			<p class="fp">
+				<a href="javascript:void(0);">联系我们</a>
+				<span>|</span>
+				<a href="javascript:void(0);">服务说明</a>
+				<span>|</span>
+				<a href="javascript:void(0);">意见反馈</a>
+			</p>
+			<!-- <p>
+				<a href="javascript:void(0);">国家测绘地理信息局&nbsp;&nbsp;监制</a>
+				<a href="javascript:void(0);">国家基础地理信息中心&nbsp;&nbsp;版权所有</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">甲测资字1100222</a>
+				<a href="javascript:void(0);">京ICP备1200922号-2</a>
+				<a href="javascript:void(0);">京公安网备1101080201222</a>
+			</p> -->
+		</div>
+	</footer>
+
+	<script src="js/jquery-1.8.1.min.js"></script>
+	<script src="js/layer/layer.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/banner.js"></script>
+	<script src="js/index.js"></script>
+	<script src="js/userlog.js"></script>
+	<script>
+		jQuery(document).ready(function() {     
+			getSession();
+
+			var userAgent = navigator.userAgent;
+			var isOpera = userAgent.indexOf("Opera") > -1;
+			if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) {
+				$(".tips").show();
+				setTimeout($(".tips").fadeOut(),3000);
+			}
+		});
+	</script>
+</body>
+</html>

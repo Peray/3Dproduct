@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<title>信息资源</title>
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/frame.css">
+	<link rel="stylesheet" href="css/service.css">
+	<style>
+		input:disabled,
+		textarea:disabled{
+			background-color:#fff;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="header-top">
+			<img class="logo1" src="img/theme3/logo2.png" alt="">
+			<div class="search clearfix" id="newser">
+				<input class="input-l" type="text" id="key" name="key" placeholder="请输入关键字查询">
+				<input class="input-r" type="button" onClick="searchData()" value="服务检索">
+			</div>
+			<div class="sign-in"></div>
+		</div>
+		<nav>
+			<ul class="clearfix" id="headmenu">
+			</ul>
+		</nav>	
+	</header>
+	<article>
+	</article>
+	<section class="clearfix">
+		<aside>
+			
+		</aside>
+		<div class="section">
+			<div class="title clearfix">
+				<p>
+					<a href="javascript:void(0);">首页</a>
+					<a class="icon" href="javascript:void(0);">></a>
+					<a href="javascript:void(0);">服务资源</a>
+				</p>
+				<p id="searKey"></p>
+			</div>
+			<ul>
+				<li class="content-list">
+					<h1>
+						<span>最新服务资源</span>
+					</h1>
+					<p class="listService">
+						
+					</p>
+				</li>
+			</ul>
+			<ul id="pagination2">
+			</ul>
+		</div>
+	</section>
+	<footer>
+		<div class="footer">
+			<!-- <p class="fp">
+				<a href="javascript:void(0);">联系我们</a>
+				<span>|</span>
+				<a href="javascript:void(0);">服务说明</a>
+				<span>|</span>
+				<a href="javascript:void(0);">意见反馈</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">国家测绘地理信息局&nbsp;&nbsp;监制</a>
+				<a href="javascript:void(0);">国家基础地理信息中心&nbsp;&nbsp;版权所有</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">甲测资字1100222</a>
+				<a href="javascript:void(0);">京ICP备1200922号-2</a>
+				<a href="javascript:void(0);">京公安网备1101080201222</a>
+			</p> -->
+		</div>
+	</footer>
+
+	<!-- 弹出框 -->
+	<div id="myPeray" class="peray fade">
+		<div class="peray-dialog">
+			<div class="peray-content">
+				<div class="peray-header">
+					<button type="button" class="close">
+						<span class="e">×</span>
+					</button>
+					<h4 class="peray-title" id="myModalLabel">内容</h4>
+				</div>
+				<div class="peray-body"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/jquery-1.8.1.min.js"></script>
+	<script src="js/layer/layer.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/load.js"></script>
+	<script src="admin/js/upload.js"></script>
+	<script src="admin/js/config.js"></script>
+	<script src="admin/js/ol.js"></script>
+	<script src="js/service.js"></script>
+	<script src="js/jquery.tablesorter.min.js"></script>
+	<script src="js/jqPaginator.js"></script>
+	<script src="js/userlog.js"></script>
+	<script>
+		jQuery(document).ready(function() {     
+		 	getSession();
+		});
+	</script>
+</body>
+</html>

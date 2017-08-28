@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+		"http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+                        
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>ct</short-name>
+	<uri>/custom-tag</uri>
+ 
+	<tag>
+		<name>categoryFile</name>
+		<tag-class>com.eastdawn.tag.CategoryFileTag</tag-class>
+		<body-content>jsp</body-content>
+		<description>一级页面类别文件块显示</description>
+		<attribute>
+		    <name>categoryId</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>Long</type>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>navigationBar</name>
+		<tag-class>com.eastdawn.tag.NavigationBarTag</tag-class>
+		<body-content>jsp</body-content>
+		<description>一级页面类别文件块显示</description>
+		<attribute>
+		    <name>categoryId</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>Long</type>
+		</attribute>
+		<attribute>
+			<name>action</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>String</type>
+		</attribute>
+		<attribute>
+			<name>fileType</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>String</type>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>navigationDepaBar</name>
+		<tag-class>com.eastdawn.tag.NavigationDepaBarTag</tag-class>
+		<body-content>jsp</body-content>
+		<description>一级页面类别文件块显示</description>
+		<attribute>
+		    <name>departmentId</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>Long</type>
+		</attribute>
+		<attribute>
+			<name>action</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>String</type>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>newLatestFileTag</name>
+		<tag-class>com.eastdawn.tag.NewLatestFileTag</tag-class>
+		<body-content>jsp</body-content>
+		<description>最近更新</description>
+		<attribute>
+		    <name>categoryId</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>Long</type>
+		</attribute>
+		<attribute>
+		    <name>fileType</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>String</type>
+		</attribute>
+		<attribute>
+		    <name>num</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>Integer</type>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>readChartTag</name>
+		<tag-class>com.eastdawn.tag.ReadChartTag</tag-class>
+		<body-content>jsp</body-content>
+		<description>阅读排行</description>
+		<attribute>
+		    <name>categoryId</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>Long</type>
+		</attribute>
+		<attribute>
+		    <name>fileType</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>String</type>
+		</attribute>
+		<attribute>
+		    <name>num</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <type>Integer</type>
+		</attribute>
+	</tag>
+    
+</taglib>

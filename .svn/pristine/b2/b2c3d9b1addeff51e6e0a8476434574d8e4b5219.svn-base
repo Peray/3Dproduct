@@ -1,0 +1,132 @@
+package com.eastdawn.action;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.eastdawn.common.BindSession;
+import com.eastdawn.dao.LogsDao;
+import com.eastdawn.dao.UserDao;
+import com.eastdawn.po.Logs;
+import com.eastdawn.po.User;
+import com.eastdawn.util.StaticName;
+
+@SuppressWarnings("serial")
+public class UserAllAction{
+	//服务查询
+	private String username;
+	private UserDao userDao;
+	private LogsDao logsDao;
+	public String execute() throws Exception {
+		HttpServletResponse iResponse =ServletActionContext.getResponse();
+		User user = new User();
+		Map queryMap = new HashMap();
+		try {
+			List userList = (List)ServletActionContext.getRequest().getSession().getAttribute("onlineUserList");
+			List onlineList = new ArrayList();
+			if(userList != null){
+				for(int i=0; i<userList.size(); i++){
+					userList.get(i).toString();
+					System.out.println(userList.get(i).toString());
+					queryMap.put("logName", userList.get(i).toString());
+					List queryList = userDao.queryOnlineUserByPage(queryMap);
+					System.out.println(queryList.size());
+					if(queryList.size() != 0){
+						onlineList.add(queryList);
+					}
+				}
+				System.out.println(onlineList.size());
+				JSONObject object = new JSONObject();
+		        object.put("list", onlineList); 
+		        System.out.println(object.toString());
+		        iResponse.setCharacterEncoding("utf-8");
+		        iResponse.getWriter().write(object.toString());
+			}
+			
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
+	
+	public String Offline()throws Exception {
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		Map queryMap = new HashMap();
+		User user = new User();
+		try {
+			if(this.username != null && !this.username.equals("")){
+				queryMap.put("logName",username);
+			}
+			List<User> userList = userDao.queryUserByPage(queryMap);
+			logAdd(this.username+"强制下线",userList.get(0).getUserId(),userList.get(0).getLogName());
+			if(userList.size() != 0){
+				user.setUserId(userList.get(0).getUserId());
+				user.setLogTime(null);
+				userDao.updateLogTimeById(user);
+			}
+			session.setAttribute("userkey", this.username);
+			HttpServletResponse response = ServletActionContext.getResponse();
+			response.getWriter().write("1");
+			System.out.println(this.username);
+			System.out.println(session.getAttribute(this.username));
+			session.removeAttribute(this.username);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		//清空最新登录时间
+		
+		return null;
+		
+	}
+	
+	public String logAdd(String event,Long userId,String logName) throws Exception {
+		try {
+			HttpSession session = ServletActionContext.getRequest().getSession();
+			Logs logs = new Logs();
+			logs.setUserName(logName);
+			logs.setUserId(userId);
+			logs.setIp(ServletActionContext.getRequest().getRemoteAddr());
+			logs.setEvent(event);
+			logs.setTime(new Date());
+			logs.setTimes(1);
+			this.logsDao.add(logs);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public UserDao getUserDao() {
+		return userDao;
+	}
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public LogsDao getLogsDao() {
+		return logsDao;
+	}
+
+	public void setLogsDao(LogsDao logsDao) {
+		this.logsDao = logsDao;
+	}
+
+}

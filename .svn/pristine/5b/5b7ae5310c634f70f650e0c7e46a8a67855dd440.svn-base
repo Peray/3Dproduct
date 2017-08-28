@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="categoryMap">
+    
+    <typeAlias alias="category" type="com.eastdawn.po.Category"/>
+    
+    <resultMap id="category-resultMap" class="category" >
+    	<result property="categoryId" column="category_Id"/>
+		<result property="categoryName" column="category_Name"/>
+		<result property="path" column="path"/>
+		<result property="parentId" column="parent_Id"/>
+		<result property="categoryList" column="category_Id" select="categoryMap.getCategoryByParentId"/>
+    </resultMap>
+    
+    <select id="getCategoryById"  resultMap="category-resultMap" parameterClass="Long">
+  		select * from tb_category where category_Id=#categoryId#
+ 	</select>
+ 	
+ 	<select id="getCategoryByParentId"  resultMap="category-resultMap" parameterClass="Long">
+  		select * from tb_category where parent_Id=#categoryId#
+ 	</select>
+ 	
+ 	<select id="queryCategoryByPage"  resultMap="category-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_category
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="parentIsNull"> 
+  				and parent_Id is null
+  			</isNotEmpty>
+  			<isNotEmpty property="parentId"> 
+  				and parent_Id = #parentId#
+  			</isNotEmpty>
+  			<isNotEmpty property="categoryId"> 
+  				and category_Id = #categoryId# 
+  			</isNotEmpty>
+  			<isNotEmpty property="categoryName"> 
+  				and category_Name = #categoryName# 
+  			</isNotEmpty>
+        </dynamic>
+         order by category_Id desc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     <!-- 获得信息数量 -->
+     
+      <select id="getCategoryCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_category
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotEmpty property="parentIsNull"> 
+	  				and parent_Id is null
+	  			</isNotEmpty>
+	  			<isNotEmpty property="parentId"> 
+	  				and parent_Id = #parentId#
+	  			</isNotEmpty>	
+	  			<isNotEmpty property="categoryId"> 
+	  				and category_Id = #categoryId# 
+	  			</isNotEmpty>
+			</dynamic>
+ 	 </select>
+      <!-- 类型添加 -->
+     <insert id="add" parameterClass="category"> 
+	 	insert into tb_category(category_Name,path,parent_Id) values (#categoryName#,#path#,#parentId#)
+ 	  </insert>
+ 	  
+ 	  <!-- 类型删除 -->
+ 	  <delete id="deleteById" parameterClass="Long">
+  		delete from tb_category where category_Id=#categoryId#
+ 	</delete>
+ 	
+ 	<!-- 类型更新 -->
+ 	<update id="updateById" parameterClass="category">
+  		update tb_category set category_Id = #categoryId#, category_Name = #categoryName#, path=#path#, parent_Id=#parentId#
+  		where category_Id=#categoryId#
+ 	</update>
+</sqlMap>

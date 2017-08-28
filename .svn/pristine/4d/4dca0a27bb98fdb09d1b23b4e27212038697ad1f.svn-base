@@ -1,0 +1,16 @@
+package com.eastdawn.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.eastdawn.po.Logs;
+
+@SuppressWarnings("unchecked")
+public interface LogsDao {
+
+	public List<Logs> queryLogByPage(Map queryMap);
+	public void add(Logs logs);
+	public Long getLogCountByPage(Map queryMap);
+	public void deleteById(Long logId);
+
+}

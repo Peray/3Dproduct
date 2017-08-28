@@ -1,0 +1,13 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-26 09:25:28
+ * @version $Id$
+ */
+footer{
+  position: absolute;
+  bottom: 0;
+  left:0;
+  width:100%;
+}

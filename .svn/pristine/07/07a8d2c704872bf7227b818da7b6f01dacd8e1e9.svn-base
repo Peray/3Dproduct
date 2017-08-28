@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="userMap">
+    
+    <typeAlias alias="user" type="com.eastdawn.po.User"/>
+    
+    <resultMap id="user-resultMap" class="user" >
+    	<result property="userId" column="user_id"/>
+		<result property="logName" column="log_name"/>
+		<result property="logPwd" column="log_pwd"/>
+		<result property="status" column="status"/>
+    </resultMap>
+    
+    <select id="getUserById"  resultMap="user-resultMap" parameterClass="Long">
+  		select * from user where user_id=#userId#
+ 	</select>
+    
+    <select id="queryUserByPage"  resultMap="user-resultMap" parameterClass="java.util.HashMap">
+ 				select t.* from user t 
+ 			<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="logName"> 
+  				and log_name = #logName#
+  			</isNotEmpty>
+  			<isNotEmpty property="logonPwd"> 
+  				and log_pwd = #logPwd#
+  			</isNotEmpty>
+  			<isNotEmpty property="userId"> 
+  				and user_id = #userId#
+  			</isNotEmpty>
+  			<isNotEmpty property="status"> 
+  				and status = #status#
+  			</isNotEmpty>
+        </dynamic>
+         order by t.user_id asc
+     </select>	
+     
+    
+ 	<select id="getUserCountByPage"  resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from user 
+			<dynamic prepend="where">
+				<isNotEmpty prepend="and" property="logName"> 
+	  				log_name = #logName#
+	  			</isNotEmpty>
+	  			<isNotEmpty prepend="and" property="logPwd"> 
+	  				log_pwd = #logPwd#
+	  			</isNotEmpty>
+	  			<isNotEmpty prepend="and" property="userId"> 
+	  				user_id = #userId#
+	  			</isNotEmpty>
+	  			<isNotEmpty prepend="and" property="status"> 
+		  		    status = #status#
+		  		</isNotEmpty>
+			</dynamic>
+ 	</select>
+ 	
+ 	 <!-- 类型添加 -->
+     <insert id="add" parameterClass="user"> 
+	 	insert into user(log_name,log_pwd,status) values (#logName#,#logPwd#,#status#)
+ 	 </insert>
+ 	 
+ 	 <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from user where user_id=#userId#
+ 	 </delete>
+ 	<!-- 更新 -->
+	 <update id="deleteUpdateById" parameterClass="user">
+	  	update user set status=#status#
+	  	where user_id=#userId#
+	 </update>
+ 	 
+ 	 <!-- 密码修改 -->
+ 	 <update id="passwordUpdateById" parameterClass="user">
+  	 	 update user set log_pwd=#logPwd#
+  		 where user_id = #userId#
+ 	 </update>
+</sqlMap>

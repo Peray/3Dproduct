@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts> 
+	<constant name="struts.i18n.encoding" value="UTF-8"/>
+	<constant name="struts.custom.i18n.resources" value="globalMessages" />
+	<constant name="struts.multipart.maxSize" value="1073741824" /> 
+	
+	
+	<package name="admin" extends="struts-default" namespace="/admin">
+		<interceptors>
+	    	 <interceptor name="debugInterceptor" class="com.eastdawn.common.DebugInterceptor"/>
+			<interceptor name="adminInterceptor" class="com.eastdawn.common.AdminSessionInterceptor"/>
+		</interceptors>
+	
+		<global-results>
+			<result name="adminLogon" type="redirect">/admin/index.jsp</result>
+		</global-results>
+	
+		<action name="admin"  class="com.eastdawn.action.AdminAction">
+			<!-- <interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref> -->
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="error">/admin/login.jsp</result>
+			<result name="success">/admin/index.jsp</result>
+			<result name="logout">/admin/login.jsp</result>
+		</action>
+		
+		<action name="logsAdmin" class="com.eastdawn.action.LogsAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action> 
+		<action name="glAdmin" class="com.eastdawn.action.ServiceGlAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action> 
+		
+		<action name="categoryAdmin" class="com.eastdawn.action.CategoryAction">
+			<interceptor-ref name="debugInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action> 
+	</package>
+	<include file="struts-user.xml"></include>
+</struts>    

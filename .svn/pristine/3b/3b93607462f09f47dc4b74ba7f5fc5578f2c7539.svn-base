@@ -1,0 +1,98 @@
+<!doctype html>
+<html class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>运维管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+	<link rel="stylesheet" href="../css/frame.css">
+	<style>
+		.logo{
+			box-sizing: content-box;
+			-webkit-box-sizing: content-box;
+		}
+		ul{
+			list-style: none;
+			padding:0;
+			margin:0;
+		}
+		.clearfix::before,.clearfix::after{
+			line-height: 0;
+			display: block;
+			visibility: hidden;
+			clear: both;
+			height: 0;
+			content: '';
+		}
+		.clearfix{
+			zoom: 1;
+		}
+		.clearfix > li{
+			float: left;
+		}
+		a{
+			color:#000;
+			font-size:12px;
+		}
+		li:hover a{
+			color:#115B9E;
+		}
+	</style>
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+	
+
+	<header>
+		<div class="header-top">
+			<img class="logo" src="../img/banner/logo1.png" alt="">	
+			<div class="sign-in"></div>
+		</div>
+		<nav>
+			<ul class="clearfix" id="headmenu">
+				<li>
+					<img src="../img/6_03.png" alt="首页" />
+					<a href="../index.html">首页</a>
+				</li>
+				<li>
+					<img src="../img/1_03.png" alt="三维展示">
+					<a href="javascript:void(0)">三维展示</a>
+				</li>
+				<li>
+					<img src="../img/2_05.png" alt="服务资源">
+					<a href="service.html">服务资源</a>
+				</li>
+				<li>
+					<img src="../img/3_07.png" alt="典型应用">
+					<a href="javascript:void(0)">典型应用</a>
+				</li>
+				<li>
+					<img src="../img/4_09.png" alt="我的资源">
+					<a href="own.html">我的资源</a>
+				</li>
+				<li class="checka">
+					<img src="../img/05_11.png" alt="运维管理">
+					<a class="blue" href="admin/index.html">运维管理</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	<!--[if (gte IE 9)|!(IE)]><!-->
+		<script src="js/jquery-1.8.1.min.js"></script>
+	<!--<![endif]-->
+	<script src="js/amazeui.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/top.js"></script>
+</body>
+</html>

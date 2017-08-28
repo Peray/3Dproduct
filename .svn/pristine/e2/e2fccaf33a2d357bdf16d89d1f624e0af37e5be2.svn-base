@@ -1,0 +1,65 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-26 09:25:28
+ * @version $Id$
+ */
+
+
+ .login, .register{
+	width: 400px;
+	margin: auto;
+	padding-top: 100px;
+ }
+ .register{
+	padding-top:30px!important;
+ }
+ .login>p,
+ .register>p{
+	padding:10px 0 0;
+	height:70px;
+ }
+ .login > p > input,
+ .register > p > input{
+	font-size: 18px;
+	line-height: 40px;
+	box-sizing: border-box;
+	width: 390px;
+	padding-left: 10px;
+	border: 1px solid #115a9f;
+ }
+
+ .ve-code>#imageCode{
+	width:300px!important;
+ }
+ .ve-code > #checkCode{
+	width: 80px;
+	height: 40px;
+	vertical-align: top;
+	border: 1px solid #115a9f;
+ }
+ input[type="submit"]{
+	display:block;
+	margin:30px auto 0;
+	width:200px;
+	height:40px;
+	font-size:18px;
+	color:#fff;
+	background-color:#115a9f;
+	cursor:pointer;
+ }
+ .turn-right{
+	text-align: right;
+ }
+	.turn-right>a{
+	color:#627CE3;
+ }
+.none{
+	display:none;
+}
+span.error{
+	color:red;
+	line-height:30px;
+	display:block;
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="logsMap">
+    
+    <typeAlias alias="logs" type="com.eastdawn.po.Logs"/>
+    
+    <resultMap id="logs-resultMap" class="logs" >
+    	<result property="logId" column="log_Id"/>
+		<result property="userName" column="user_Name"/>
+		<result property="ip" column="ip"/>
+		<result property="time" column="time"/>
+		<result property="event" column="event"/>
+		<result property="times" column="times"/>
+    </resultMap>
+    
+    <select id="queryLogByPage"  resultMap="logs-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_logs
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotNull property="startTime"> 
+		  	<![CDATA[
+		  		and time >= #startTime# 
+		  	]]>
+		  	</isNotNull>	
+		  	<isNotNull property="endTime"> 
+			<![CDATA[
+				and time <= #endTime#
+			]]>	
+			</isNotNull> 	
+        </dynamic>
+         order by log_Id desc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="getLogCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_logs
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotNull property="startTime"> 
+			  	<![CDATA[
+			  		and time >= #startTime# 
+			  	]]>
+			  	</isNotNull>	
+			  	<isNotNull property="endTime"> 
+				<![CDATA[
+					and time <= #endTime#
+				]]>	
+				</isNotNull>  	
+			</dynamic>
+ 	</select>
+ 	
+ 	 <!-- 日志添加 -->
+     <insert id="add" parameterClass="logs"> 
+	 	insert into tb_logs(user_Name,ip,time,event,times) values (#userName#,#ip#,#time#,#event#,#times#)
+ 	 </insert>
+ 	  <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_logs where log_Id=#logId#
+ 	 </delete>
+</sqlMap>

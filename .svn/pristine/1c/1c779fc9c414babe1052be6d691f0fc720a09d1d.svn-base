@@ -1,0 +1,260 @@
+﻿var j = 0, count = 0;
+var map,fileUrl;
+var view;
+var pointXList = [];
+var pointYList = [];
+var Xmin,Ymin,Xmax,Ymax;
+function fileSelected(obj) {
+	$('#arlt').val("");
+    var file=null; 
+    file = document.getElementById('afileToUpload').files; 
+    for (var i = 0; i < file.length;i++) {
+        var html = "";
+		fileUrl = window.URL.createObjectURL(file[i]);
+		html += "<img src='"+fileUrl+"' data-action='zoom'/>"+
+			"<span class='del' onclick='del()'>删除</span>"
+    }
+	$("#imgs1").html(html)
+    count=file.length;
+    $('.am-map').show();
+	    loadBaiduMap(fileUrl);
+//    uploadFile();
+} 
+
+$(document).on('click', '.remove', function () {
+    var idx = $(this).parent().prevAll().length;
+    $(this).parent().remove(); 
+    var al = $('#arlt').val().split('img');
+    al.splice(idx, 1);
+    var values = "";
+    for (var i = 1; i < al.length; i++) {
+        values +="img" +al[i];
+    }
+    $('#arlt').val(values);
+});
+
+$(document).on('click', '.removePic', function () {
+    var idx = $(this).parent().prevAll().length;
+    $(this).parent().remove();
+    var al = $('#rlt').val().split('img');
+    al.splice(idx, 1);
+    var values = "";
+    for (var i = 1; i < al.length; i++) {
+        values += "img" + al[i];
+    }
+    $('#rlt').val(values);
+});
+
+function uploadFile() {
+    var fd = new FormData(); 
+    if(document.getElementById('afileToUpload').files[j] == null){
+     return;
+    }
+    fd.append("afileToUpload", document.getElementById('afileToUpload').files[j]); 
+    var xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+            if (percentComplete != 100) {
+                $('#progressNumber' + j).text(percentComplete.toString() + '%');
+            } else {
+                $('#progressNumber' + j).text("上传完成!");
+            }
+        }
+        else {
+            $('#progressNumber' + j).text("无法计算!");
+        }
+    }, false);
+    xhr.addEventListener("load", uploadComplete, false);
+    xhr.addEventListener("error", uploadFailed, false);
+    xhr.addEventListener("abort", uploadCanceled, false);
+    xhr.open("POST", "../UploadFile.do");
+    xhr.send(fd);
+    $('.upfile').hide();
+    $('.upfile>a').remove();
+}
+
+function uploadComplete(evt) {
+    /* This event is raised when the server send back a response */ 
+    var rlt = evt.target.responseText;
+    if (rlt.length > 1) {  
+	    var old = $('#arlt').val();
+	    $('#arlt').val(old +system.pturl+ rlt); 
+	     $.ajax({
+			type:'post',
+			url: 'glAdmin!searchNumber.action',
+			dataType: 'json',
+			success:function(ret){
+				ret = eval(ret);
+				var str = rlt.substr(rlt.indexOf('/')+1,8);
+				var number = parseInt(ret.num)+1;
+				$('#doc-ipt-num-1').val("geojson"+str+number);
+			}
+		})
+    }
+}
+
+function uploadFailed(evt) {
+    alert(evt+"上传失败.");
+}
+
+function uploadCanceled(evt) {
+    alert("取消上传.");
+}
+//删除
+function del(){
+	var Imgnode =  $("#arlt").val();
+	Imgsub = Imgnode.substring(4); 
+	$.ajax({
+		url:'glAction!deleteFile.action',
+		data:{"fileName":Imgsub},
+		success:function(data){
+			if(data == 1){
+				alert("删除成功!")
+			}else{
+				alert("删除失败!")
+			}
+		},
+		error:function(){
+			
+		}
+	});
+	$("#imgs1").html('');
+	$("#arlt").val("");
+	
+	var jia = "";
+	jia += "<a href='javascript:;' class='a-upload' style='height: 20px;'>"+
+				"<span><img src='../img/timg.jpg' alt=''></span>"+
+				"<input type='file' name='afileToUpload' id='afileToUpload' onchange='fileSelected(this);' />"+
+			"</a>"
+	$(".upfile").show().html(jia);
+}
+
+//显示地图js
+function loadBaiduMap(url) {
+	var mapDiv = document.getElementById("dituContent");
+	var viewDiv =  document.getElementsByClassName("ol-viewport");
+	if(viewDiv.length == 0){
+		var projection = ol.proj.get("EPSG:3857");	
+		var resolutions = [];
+		for(var i=0; i<19; i++){
+			resolutions[i] = Math.pow(2, 18-i);
+		}
+		var tilegrid  = new ol.tilegrid.TileGrid({
+			origin: [0,0],
+			resolutions: resolutions
+		});
+		var baidu_source = new ol.source.TileImage({
+			projection: projection,
+			tileGrid: tilegrid,
+			tileUrlFunction: function(tileCoord, pixelRatio, proj){
+				if(!tileCoord){
+					return "";
+				}
+				var z = tileCoord[0];
+				var x = tileCoord[1];
+				var y = tileCoord[2];
+		
+				if(x<0){
+					x = "M"+(-x);
+				}
+				if(y<0){
+					y = "M"+(-y);
+				}
+		
+				return "http://online3.map.bdimg.com/onlinelabel/?qt=tile&x="+x+"&y="+y+"&z="+z+"&styles=pl&udt=20151021&scaler=1&p=1";
+			}
+		});
+		var baidu_layer = new ol.layer.Tile({
+			source: baidu_source
+		});
+		view = new ol.View({
+			center: [12959773,4853101],
+			zoom: 4
+		});
+		map = new ol.Map({
+			target: mapDiv,
+			layers: [baidu_layer],
+			controls: ol.control.defaults({
+			attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+				collapsible: false
+			})
+			}),
+			view: view
+		});
+		loadGeoJson(url);
+	}else{
+		map.removeLayer(map.getLayers().getArray()[1]);
+		pointXList = [];
+		pointYList = [];
+		Xmin = "";
+		Ymin = "";
+		Xmax = "";
+		Ymax = "";
+		loadGeoJson(url);
+	}
+	
+	setTimeout(function () {
+		var features = source.getFeatures();
+		for(var i=0;i<features.length;i++){
+			getXYFromFeature(features[i]);
+		}
+		getMaxMinfromArray();
+		view.fit([Xmin,Ymin,Xmax,Ymax],{duration: 1000});
+	}, 1000);
+}
+
+function loadGeoJson(url){
+	source = new ol.source.Vector({
+		url: url,
+		format: new ol.format.GeoJSON()
+	});
+	var vector = new ol.layer.Vector({
+		source: source
+	});
+	map.addLayer(vector);
+}
+
+function getXYFromFeature(feature){
+	var type = feature.getGeometry().getType();
+	var geometry = feature.getGeometry();
+	var coordinates = geometry.getCoordinates();
+	if(type == "Point"){
+		pointXList.push(coordinates[0]);
+		pointYList.push(coordinates[1]);
+	}
+	if(type == "LineString"){
+		for(var i=0;i<coordinates.length;i++){
+			pointXList.push(coordinates[i][0]);
+			pointYList.push(coordinates[i][1]);
+		}
+	}
+	if(type == "Polygon"){
+		for(var i=0;i<coordinates[0].length;i++){
+			pointXList.push(coordinates[0][i][0]);
+			pointYList.push(coordinates[0][i][1]);
+		}
+	}
+}
+
+function getMaxMinfromArray(){
+	var length = pointXList.length;
+	for(var i=0;i<length;i++){
+		if(Xmin == undefined||Xmin == "")
+			Xmin = pointXList[i];
+		else if(pointXList[i] < Xmin)
+				Xmin = pointXList[i];
+		if(Ymin == undefined||Ymin == "")
+			Ymin = pointYList[i];
+		else if(pointYList[i] < Ymin)
+				Ymin = pointYList[i];
+		if(Xmax == undefined||Xmax == "")
+			Xmax = pointXList[i];
+		else if(pointXList[i] > Xmax)
+				Xmax = pointXList[i];
+		if(Ymax == undefined||Ymax == "")
+			Ymax = pointYList[i];
+		else if(pointYList[i] > Ymax)
+				Ymax = pointYList[i];
+	}
+}

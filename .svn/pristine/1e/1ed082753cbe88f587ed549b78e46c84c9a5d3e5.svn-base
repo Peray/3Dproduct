@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="serviceGlMap">
+    
+    <typeAlias alias="serviceGl" type="com.eastdawn.po.ServiceGl"/>
+    
+    <resultMap id="serviceGl-resultMap" class="serviceGl" >
+    	<result property="glId" column="gl_id"/>
+		<result property="glNumber" column="gl_Number"/>
+		<result property="glName" column="gl_Name"/>
+		<result property="fbTime" column="fb_Time"/>
+		<result property="fbPop" column="fb_Pop"/>
+		<result property="address" column="address"/>
+		<result property="content" column="content"/>
+		<result property="imgPath" column="img_Path"/>
+		<result property="browse" column="browse"/>
+    </resultMap>
+    <select id="getGLById"  resultClass="Long" parameterClass="java.util.HashMap">
+  		select gl_Id from tb_service ORDER BY gl_Id DESC LIMIT 1 
+ 	</select>
+    
+    <select id="queryGLByPage"  resultMap="serviceGl-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_service
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="glId"> 
+  				and gl_Id = #glId#
+  			</isNotEmpty>
+        </dynamic>
+         order by gl_Id desc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="querySearchKeyByPage"  resultMap="serviceGl-resultMap" parameterClass="java.util.HashMap">
+ 		select distinct gl_Id,gl_Number, address,gl_Name,fb_Time,fb_Pop,content from tb_service a, tb_metadata b 
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="paramList">
+  				and b.parent_Id = a.gl_Id
+	  			<iterate property="paramList">
+	  			 and
+				(
+					lower(a.gl_Number) like '%$paramList[]$%'
+					or lower(a.gl_Name) like '%$paramList[]$%'
+					or lower(a.fb_Time) like '%$paramList[]$%' 
+					or lower(a.fb_Pop) like '%$paramList[]$%' 
+					or lower(a.content) like '%$paramList[]$%'
+					or lower(b.data_Name) like '%$paramList[]$%'
+					or lower(b.fw_Content) like '%$paramList[]$%'
+					or lower(b.zdx) like '%$paramList[]$%' 
+					or lower(b.zdy) like '%$paramList[]$%' 
+					or lower(b.zxx) like '%$paramList[]$%'
+					or lower(b.zxy) like '%$paramList[]$%'
+					or lower(b.fbl) like '%$paramList[]$%'
+					or lower(b.fwlx) like '%$paramList[]$%'
+					or lower(b.yx_NewTime) like '%$paramList[]$%'
+					or lower(b.yx_Source) like '%$paramList[]$%'
+					or lower(b.yxcjdw) like '%$paramList[]$%'
+					or lower(b.yxcldw) like '%$paramList[]$%'
+					or lower(b.yxsdr) like '%$paramList[]$%'
+					or lower(b.yxsddw) like '%$paramList[]$%'
+					or lower(b.yxsdsj) like '%$paramList[]$%'
+					or lower(b.sjmj) like '%$paramList[]$%'
+					or lower(b.cqgs) like '%$paramList[]$%'
+					or lower(b.sh_Pop) like '%$paramList[]$%'
+					or lower(b.sh_Time) like '%$paramList[]$%'
+					or lower(b.sx) like '%$paramList[]$%'
+					or lower(b.wxlx) like '%$paramList[]$%'
+				)
+				</iterate>
+			</isNotEmpty>
+        </dynamic>
+         order by gl_Id desc
+         <isNotEmpty property="numStart">
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="getSearchKeyCountByNum" resultClass="Long" parameterClass="java.util.HashMap">
+ 		 select count(distinct gl_Id) from tb_service a, tb_metadata b 
+			<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="paramList">
+  				and b.parent_Id = a.gl_Id 
+	  			<iterate property="paramList">
+	  			and
+				(
+					lower(a.gl_Number) like '%$paramList[]$%'
+					or lower(a.gl_Name) like '%$paramList[]$%'
+					or lower(a.fb_Time) like '%$paramList[]$%' 
+					or lower(a.fb_Pop) like '%$paramList[]$%' 
+					or lower(a.content) like '%$paramList[]$%'
+					or lower(b.data_Name) like '%$paramList[]$%'
+					or lower(b.fw_Content) like '%$paramList[]$%'
+					or lower(b.zdx) like '%$paramList[]$%' 
+					or lower(b.zdy) like '%$paramList[]$%' 
+					or lower(b.zxx) like '%$paramList[]$%'
+					or lower(b.zxy) like '%$paramList[]$%'
+					or lower(b.fbl) like '%$paramList[]$%'
+					or lower(b.fwlx) like '%$paramList[]$%'
+					or lower(b.yx_NewTime) like '%$paramList[]$%'
+					or lower(b.yx_Source) like '%$paramList[]$%'
+					or lower(b.yxcjdw) like '%$paramList[]$%'
+					or lower(b.yxcldw) like '%$paramList[]$%'
+					or lower(b.yxsdr) like '%$paramList[]$%'
+					or lower(b.yxsddw) like '%$paramList[]$%'
+					or lower(b.yxsdsj) like '%$paramList[]$%'
+					or lower(b.sjmj) like '%$paramList[]$%'
+					or lower(b.cqgs) like '%$paramList[]$%'
+					or lower(b.sh_Pop) like '%$paramList[]$%'
+					or lower(b.sh_Time) like '%$paramList[]$%'
+					or lower(b.sx) like '%$paramList[]$%'
+					or lower(b.wxlx) like '%$paramList[]$%'
+				)
+				</iterate>
+			</isNotEmpty>
+        </dynamic>
+ 	</select>
+     
+     <select id="queryCategoryByPage"  resultMap="serviceGl-resultMap" parameterClass="java.util.HashMap">
+ 		select distinct gl_Id,gl_Number, address,gl_Name,fb_Time,fb_Pop,content,img_Path,browse from tb_service a, tb_metadata b where 1=1 and b.parent_Id = a.gl_Id
+  			<isNotEmpty property="fbl"> 
+  				and b.fbl = #fbl#
+  			</isNotEmpty>
+  			<isNotEmpty property="fwlx"> 
+  				and b.fwlx = #fwlx#
+  			</isNotEmpty>
+  			<isNotEmpty property="sx"> 
+  				and year(b.sx)=#sx#
+  			</isNotEmpty>
+  			<isNotEmpty property="wxlx"> 
+  				and b.wxlx = #wxlx#
+  			</isNotEmpty>
+  			order by gl_Id desc
+	        <isNotEmpty property="numStart">
+				LIMIT #numStart#,10
+			</isNotEmpty>
+     </select>	
+     <select id="getCategoryCountByNum" resultClass="Long" parameterClass="java.util.HashMap">
+ 		 select count(distinct gl_Id) from tb_service a, tb_metadata b where 1=1 and b.parent_Id = a.gl_Id
+ 			 <isNotEmpty property="fbl"> 
+  				and b.fbl = #fbl#
+  			</isNotEmpty>
+  			<isNotEmpty property="fwlx"> 
+  				and b.fwlx = #fwlx#
+  			</isNotEmpty>
+  			<isNotEmpty property="sx"> 
+  				and year(b.sx)=#sx#
+  			</isNotEmpty>
+  			<isNotEmpty property="wxlx"> 
+  				and b.wxlx = #wxlx#
+  			</isNotEmpty>
+ 	</select>
+     <select id="getGLCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_service
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotEmpty property="glId"> 
+	  				and gl_Id = #glId#
+	  			</isNotEmpty>
+			</dynamic>
+ 	</select>
+ 	
+ 	<select id="getGLCountByNum" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select COUNT(*) from tb_service where to_days(fb_Time) = to_days(now())
+ 	</select>
+ 	
+ 	 <!-- 服务添加 -->
+     <insert id="add" parameterClass="serviceGl"> 
+	 	insert into tb_service(gl_Number,gl_Name,fb_Time,fb_Pop,address,content,img_Path,browse) values (#glNumber#,#glName#,#fbTime#,#fbPop#,#address#,#content#,#imgPath#,0)
+ 	 </insert>
+ 	  <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_service where gl_Id=#glId#
+ 	 </delete>
+ 	 <update id="updateById" parameterClass="serviceGl">
+	  	update tb_service set gl_Number = #glNumber#,gl_Name = #glName#,fb_Time = #fbTime#,address = #address#,content = #content#,img_Path = #imgPath#
+	  	where gl_Id=#glId#
+	 </update>
+	 <!-- 浏览量累加 -->
+	 <update id="updateBrowseById" parameterClass="serviceGl">
+	  	update tb_service set browse = #browse#
+	  	where gl_Id=#glId#
+	 </update>
+</sqlMap>

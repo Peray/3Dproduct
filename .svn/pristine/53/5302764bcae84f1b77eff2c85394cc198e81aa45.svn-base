@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="myServiceMap">
+    
+    <typeAlias alias="myService" type="com.eastdawn.po.MyService"/>
+    
+    <resultMap id="myService-resultMap" class="myService" >
+    	<result property="serviceId" column="Service_Id"/>
+		<result property="serviceNumber" column="service_Number"/>
+		<result property="serviceName" column="service_Name"/>
+		<result property="time" column="time"/>
+		<result property="userId" column="user_Id"/>
+		<result property="parentId" column="parent_Id"/>
+    </resultMap>
+    <select id="queryMSByPage"  resultMap="myService-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_myservice
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="serviceId"> 
+  				and service_Id = #serviceId#
+  			</isNotEmpty>
+  			<isNotEmpty property="serviceName"> 
+  				and service_Name = #serviceName#
+  			</isNotEmpty>
+  			<isNotEmpty property="userId"> 
+  				and user_Id = #userId#
+  			</isNotEmpty>
+  			<isNotEmpty property="parentId"> 
+  				and parent_Id = #parentId#
+  			</isNotEmpty>
+        </dynamic>
+         order by service_Id desc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="getMSCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_myservice
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotEmpty property="serviceId"> 
+	  				and service_Id = #serviceId#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="serviceName"> 
+	  				and service_Name = #serviceName#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="userId"> 
+	  				and user_Id = #userId#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="parentId"> 
+	  				and parent_Id = #parentId#
+	  			</isNotEmpty>
+			</dynamic>
+ 	 </select>
+ 	 
+ 	  <select id="querySearchKeyByPage"  resultMap="myService-resultMap" parameterClass="java.util.HashMap">
+ 		select service_Id,service_Number, service_Name,time,user_Id,a.parent_Id from tb_myservice a, tb_metadata b 
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="paramList">
+  				and b.parent_Id = a.parent_Id
+	  			and a.user_Id = #userId#
+	  			<iterate property="paramList">
+	  			 and
+				(
+					lower(a.service_Number) like '%$paramList[]$%'
+					or lower(a.service_Name) like '%$paramList[]$%'
+					or lower(a.time) like '%$paramList[]$%' 
+					or lower(b.data_Name) like '%$paramList[]$%'
+					or lower(b.fw_Content) like '%$paramList[]$%'
+					or lower(b.zdx) like '%$paramList[]$%' 
+					or lower(b.zdy) like '%$paramList[]$%' 
+					or lower(b.zxx) like '%$paramList[]$%'
+					or lower(b.zxy) like '%$paramList[]$%'
+					or lower(b.fbl) like '%$paramList[]$%'
+					or lower(b.fwlx) like '%$paramList[]$%'
+					or lower(b.yx_NewTime) like '%$paramList[]$%'
+					or lower(b.yx_Source) like '%$paramList[]$%'
+					or lower(b.yxcjdw) like '%$paramList[]$%'
+					or lower(b.yxcldw) like '%$paramList[]$%'
+					or lower(b.yxsdr) like '%$paramList[]$%'
+					or lower(b.yxsddw) like '%$paramList[]$%'
+					or lower(b.yxsdsj) like '%$paramList[]$%'
+					or lower(b.sjmj) like '%$paramList[]$%'
+					or lower(b.cqgs) like '%$paramList[]$%'
+					or lower(b.sh_Pop) like '%$paramList[]$%'
+					or lower(b.sh_Time) like '%$paramList[]$%'
+					or lower(b.sx) like '%$paramList[]$%'
+					or lower(b.wxlx) like '%$paramList[]$%'
+				)
+				</iterate>
+			</isNotEmpty>
+        </dynamic>
+         order by service_Id desc
+         <isNotEmpty property="numStart">
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="getSearchKeyCountByNum" resultClass="Long" parameterClass="java.util.HashMap">
+ 		 select count(service_Id) from tb_myservice a, tb_metadata b 
+			<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="paramList">
+  				and b.parent_Id = a.parent_Id 
+	  			and a.user_Id = #userId#
+	  			<iterate property="paramList">
+	  			and
+				(
+					lower(a.service_Number) like '%$paramList[]$%'
+					or lower(a.service_Name) like '%$paramList[]$%'
+					or lower(a.time) like '%$paramList[]$%' 
+					or lower(b.data_Name) like '%$paramList[]$%'
+					or lower(b.fw_Content) like '%$paramList[]$%'
+					or lower(b.zdx) like '%$paramList[]$%' 
+					or lower(b.zdy) like '%$paramList[]$%' 
+					or lower(b.zxx) like '%$paramList[]$%'
+					or lower(b.zxy) like '%$paramList[]$%'
+					or lower(b.fbl) like '%$paramList[]$%'
+					or lower(b.fwlx) like '%$paramList[]$%'
+					or lower(b.yx_NewTime) like '%$paramList[]$%'
+					or lower(b.yx_Source) like '%$paramList[]$%'
+					or lower(b.yxcjdw) like '%$paramList[]$%'
+					or lower(b.yxcldw) like '%$paramList[]$%'
+					or lower(b.yxsdr) like '%$paramList[]$%'
+					or lower(b.yxsddw) like '%$paramList[]$%'
+					or lower(b.yxsdsj) like '%$paramList[]$%'
+					or lower(b.sjmj) like '%$paramList[]$%'
+					or lower(b.cqgs) like '%$paramList[]$%'
+					or lower(b.sh_Pop) like '%$paramList[]$%'
+					or lower(b.sh_Time) like '%$paramList[]$%'
+					or lower(b.sx) like '%$paramList[]$%'
+					or lower(b.wxlx) like '%$paramList[]$%'
+				)
+				</iterate>
+			</isNotEmpty>
+        </dynamic>
+ 	</select>
+ 	
+ 	 <!-- 服务添加 -->
+     <insert id="add" parameterClass="myService"> 
+	 	insert into tb_myservice(service_Number,service_Name,time,user_Id,parent_Id) values (#serviceNumber#,#serviceName#,#time#,#userId#,#parentId#)
+ 	 </insert>
+ 	  <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_myservice where service_Id=#serviceId#
+ 	 </delete>
+ 	 
+ 	 <!-- 本周服务订阅 -->
+ 	 <select id="querySearchWeekByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+ 		select parent_Id,service_Name, count(1) as counts from  tb_myservice where YEARWEEK( date_format(  time,'%Y-%m-%d' ) ) = YEARWEEK( now( ) )  GROUP BY service_name  ORDER BY counts desc  LIMIT 0,10
+     </select>
+     
+     <!-- 本月服务订阅 -->
+ 	 <select id="querySearchMonthByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select parent_Id,service_Name, count(1) as counts from  tb_myservice where DATE_FORMAT( time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) GROUP BY service_name  ORDER BY counts desc LIMIT 0,10
+     </select>
+     
+     <!-- 本年服务订阅 -->
+ 	 <select id="querySearchYearByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select parent_Id,service_Name, count(1) as counts from tb_myservice where YEAR( time ) = YEAR( NOW( ) ) GROUP BY service_name  ORDER BY counts desc LIMIT 0,10
+     </select>
+</sqlMap>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>我的资源</title>
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/frame.css">
+	<link rel="stylesheet" href="css/own.css">
+	<link rel="stylesheet" href="css/banner.css" />
+	<style>
+		table thead tr .header {
+			background-image: url(img/tablesorter/sort_both.png);
+			background-repeat: no-repeat;
+			background-position: center right;
+			cursor: pointer;
+		}
+		table thead tr .headerSortDown {
+			background-image: url(img/tablesorter/sort_asc.png);
+		}
+		table thead tr .headerSortUp {
+			background-image: url(img/tablesorter/sort_desc.png);
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<img class="logo" src="" alt="">
+		<nav class="clearfix">
+			<ul class="clearfix" id="headmenu">
+				
+			</ul>
+			<div class="sign-in">
+			</div>
+		</nav>	
+	</header>
+	<article>
+		<div class="out">
+			<ul class="tu">
+				<li><a href="#"><img src="img/banner/2.jpg" style="width:100%;height:200px;" /></a></li>
+				<li><a href="#"><img src="img/banner/3.jpg" style="width:100%;height:200px;" /></a></li>
+				<li><a href="#"><img src="img/banner/5.jpg" style="width:100%;height:200px;" /></a></li>
+			</ul>
+			<ul class="shu">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+			<div class="search clearfix">
+				<input class="input-l" type="text" id="key" name="key" placeholder="搜索提示...">
+			    <input class="input-r" type="button" onClick="searchData()" value="服务检索">
+			</div>
+		</div>
+	</article>
+	<section>
+		<p class="user">用户：<span>xxx</span></p>
+		<div class="caption">
+			<button>资源定制</button>
+		</div>
+		<table id="myTable">
+			<thead>
+				<tr>
+					<th>编号</th>
+					<th>名称</th>
+					<th>订阅时间</th>
+					<th>到期时间</th>
+					<th>订阅状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>20160001</td>
+					<td>青海三维DEM服务</td>
+					<td>2016-06-12</td>
+					<td class="warn">2017-06-12</td>
+					<td class="warn">过期</td>
+					<td>
+						<span>取消订阅</span>
+						<span>|</span>
+						<span>继续订阅</span>
+					</td>
+				</tr>
+				<tr>
+					<td>20170003</td>
+					<td>青海流域服务</td>
+					<td>2017-07-22</td>
+					<td>2018-07-22</td>
+					<td>正常</td>
+					<td>
+						<span>取消订阅</span>
+						<span>|</span>
+						<span>继续订阅</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</section>
+	<footer>
+		<div class="footer">
+			<p class="fp">
+				<a href="javascript:void(0);">联系我们</a>
+				<span>|</span>
+				<a href="javascript:void(0);">服务说明</a>
+				<span>|</span>
+				<a href="javascript:void(0);">意见反馈</a>
+			</p>
+			<!-- <p>
+				<a href="javascript:void(0);">国家测绘地理信息局&nbsp;&nbsp;监制</a>
+				<a href="javascript:void(0);">国家基础地理信息中心&nbsp;&nbsp;版权所有</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">甲测资字1100222</a>
+				<a href="javascript:void(0);">京ICP备1200922号-2</a>
+				<a href="javascript:void(0);">京公安网备1101080201222</a>
+			</p> -->
+		</div>
+	</footer>
+
+	<script src="js/jquery-1.8.1.min.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/jquery.tablesorter.min.js"></script>
+	<script src="js/own.js"></script>
+	<script src="js/login.js"></script>
+	<script src="js/banner.js"></script>
+	<script src="js/userlog.js"></script>
+	<script>
+		jQuery(document).ready(function() {  
+			getSession();   
+		 	createCode();
+		});
+	</script>
+</body>
+</html>

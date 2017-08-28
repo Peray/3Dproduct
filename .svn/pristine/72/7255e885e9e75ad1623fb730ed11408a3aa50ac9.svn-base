@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="metadataMap">
+    
+    <typeAlias alias="metadata" type="com.eastdawn.po.Metadata"/>
+    
+    <resultMap id="metadata-resultMap" class="metadata" >
+    	<result property="dataId" column="data_Id"/>
+		<result property="fwContent" column="fw_Content"/>
+		<result property="zdx" column="zdx"/>
+		<result property="zdy" column="zdy"/>
+		<result property="zxx" column="zxx"/>
+		<result property="zxy" column="zxy"/>
+		<result property="fbl" column="fbl"/>
+		<result property="fwlx" column="fwlx"/>
+		<result property="yxSource" column="yx_Source"/>
+		<result property="yxcjdw" column="yxcjdw"/>
+		<result property="yxcldw" column="yxcldw"/>
+		<result property="yxsdr" column="yxsdr"/>
+		<result property="yxsddw" column="yxsddw"/>
+		<result property="yxsdsj" column="yxsdsj"/>
+		<result property="sjmj" column="sjmj"/>
+		<result property="cqgs" column="cqgs"/>
+		<result property="shPop" column="sh_Pop"/>
+		<result property="shTime" column="sh_Time"/>
+		<result property="parentId" column="parent_Id"/>
+		<result property="sx" column="sx"/>
+		<result property="wxlx" column="wxlx"/>
+    </resultMap>
+    
+    <select id="queryMetadataByPage"  resultMap="metadata-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_metadata
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="dataId"> 
+  				and data_Id = #dataId#
+  			</isNotEmpty>
+  			<isNotEmpty property="parentId"> 
+  				and parent_Id = #parentId#
+  			</isNotEmpty>
+        </dynamic>
+     </select>	
+     
+     <select id="getMetadataCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_metadata
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotEmpty property="dataId"> 
+	  				and data_Id = #dataId#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="parentId"> 
+	  				and parent_Id = #parentId#
+	  			</isNotEmpty>
+			</dynamic>
+ 	</select>
+ 	
+ 	 <!-- 元数据添加 -->
+     <insert id="add" parameterClass="metadata"> 
+	 	insert into tb_metadata(fw_Content,zdx,zdy,zxx,zxy,fbl,fwlx,yx_Source,yxcjdw,yxcldw,yxsdr,yxsddw,yxsdsj,sjmj,cqgs,sh_Pop,sh_Time,parent_Id,sx,wxlx) values (#fwContent#,#zdx#,#zdy#,#zxx#,#zxy#,#fbl#,#fwlx#,#yxSource#,#yxcjdw#,#yxcldw#,#yxsdr#,#yxsddw#,#yxsdsj#,#sjmj#,#cqgs#,#shPop#,#shTime#,#parentId#,#sx#,#wxlx#)
+ 	 </insert>
+ 	  <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_metadata where parent_Id=#parentId#
+ 	 </delete>
+ 	 <update id="updateById" parameterClass="metadata">
+	  	update tb_metadata set fw_Content = #fwContent#,zdx = #zdx#,zdy = #zdy#,zxx = #zxx#,zxy = #zxy#,fbl = #fbl#,yx_Source = #yxSource#,yxcjdw = #yxcjdw#,yxcldw = #yxcldw#,yxsdr = #yxsdr#,yxsddw = #yxsddw#,yxsdsj = #yxsdsj#,sjmj = #sjmj#,cqgs = #cqgs#,sh_Pop = #shPop#,sh_Time = #shTime#,parent_Id = #parentId#,sx = #sx#,wxlx = #wxlx#
+	  	where parent_Id=#parentId#
+	 </update>
+</sqlMap>

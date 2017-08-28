@@ -1,0 +1,734 @@
+$(window).load(function() {
+	getdata(1,true);
+});
+var rp = 10;
+//加载管理信息
+function getdata(page,b){
+	$.ajax({
+		type:'post',
+		url: 'glAdmin!execute.action',
+		dataType: 'json',
+		data: { statr: page,rp:rp},
+		success:function(ret){
+			ret = eval(ret);
+			var div = "";
+			totalitems = ret.num;
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i].fbTime.time);
+							Y = date.getFullYear() + '-';
+							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							D = date.getDate();
+					div += '<tr>'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+ret.list[i].glName+'</td>'+
+								//'<td><a href="'+ret.list[i].address+'" target="_blank" >'+ret.list[i].address+'</a></td>'+
+								'<td>'+ret.list[i].content+'</td>'+
+								'<td>'+Y+M+D+'</td>'+
+								'<td>'+ret.list[i].fbPop+'</td>'+
+								'<td class="am-text-center">'+
+									'<button class="am-btn am-btn-default am-radius am-btn-xs" onClick="lookUp('+ret.list[i].glId+');">查看</button>　'+
+									'<button class="am-btn am-btn-default am-radius am-btn-xs" onClick="edit('+ret.list[i].glId+');">编辑</button>　'+
+									'<button class="am-btn am-btn-default am-radius am-btn-xs" onClick="deletesc('+ret.list[i].glId+');">删除</button>'+
+								'</td>'+
+							'</tr>'
+				}
+			}
+			$(".neirong").html(div);
+			$("#myTable3").trigger("update");
+
+			if(b){
+				initPage(totalitems);
+			}
+			
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};
+//
+//分页
+function initPage(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+				if(num!=1){
+					getdata(num,false);
+				}if(num == 1){
+					getdata(1,false);
+				}
+			}
+		});
+	}
+}
+
+//查看方法
+function lookUp(id){
+	$.ajax({
+		type:'post',
+		url: 'glAdmin!detail.action',
+		dataType: 'json',
+		data:{glId:id},
+		success:function(ret){
+			ret = eval(ret);
+			var date = new Date(ret.list[0].fbTime.time);
+				Y = date.getFullYear() + '-';
+				M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+				D = (date.getDate() < 10 ? '0'+( date.getDate()) :  date.getDate());
+			var div='';
+			div+=	'<div class="am-popup-hd">'+
+						'<h4 class="am-popup-title">查看</h4>'+
+						'<span data-am-modal-close class="am-close">&times;</span>'+
+					'</div>'+
+					'<div class="am-popup-bd">'+
+						'<form class="am-form am-form-horizontal">'+
+							'<fieldset>'+
+								'<legend>新增服务</legend>'+
+								
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label">服务展示</label>'+
+									'<div class="am-u-sm-8">'+
+										'<div style="width:100%;height:300px;" id="dituContent"></div>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-ipt-num-1">服务编号</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-ipt-num-1" disabled value='+ret.list[0].glNumber+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">服务名称</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-ipt-name-1" name="glName" disabled value='+ret.list[0].glName+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+								
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-date-1">服务发布时间</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" data-am-datepicker id="doc-data-date-1"  disabled value='+Y+M+D+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-ta-1">描述</label>'+
+									'<div class="am-u-sm-8">'+
+										'<textarea rows="5" id="doc-ta-1" name="content" disabled>'+ret.list[0].content+'</textarea>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<legend>元数据信息</legend>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-dir-1">方位描述</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-dir-1" name="fwContent" disabled value='+ret.metaList[0].fwContent+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1">地理信息坐标</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zdx" disabled value='+ret.metaList[0].zdx+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1"></label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zdy" disabled value='+ret.metaList[0].zdy+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1"></label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zxx" disabled value='+ret.metaList[0].zxx+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1"></label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zxy" disabled value='+ret.metaList[0].zxy+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-type-1">服务类型</label>'+
+									'<div class="am-u-sm-8">'+
+										'<select id="doc-data-type-1" name="fwlx" disabled required>'+
+											'<option>'+ret.metaList[0].fwlx+'</option>'+
+										'</select>'+
+										'<span class="am-form-caret"></span>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+								
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-fbl-1">分辨率</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-fbl-1" name="fbl" disabled required value='+ret.metaList[0].fbl+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+								
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-fbl-1">卫星类型</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-fbl-1" name="wxlx" disabled required value='+ret.metaList[0].wxlx+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+								
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-date-1">时相</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" data-am-datepicker id="doc-data-date-1" name="sx" disabled value='+ret.metaList[0].sx+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-ly-1">来源</label>'+
+									'<div class="am-u-sm-8">'+
+										'<select id="doc-data-ly-1"  name="yxSource" disabled>'+
+											'<option>'+ret.metaList[0].yxSource+'</option>'+
+										'</select>'+
+										'<span class="am-form-caret"></span>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-cjdw-1">原始影像采集单位</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-cjdw-1" name="yxcjdw" disabled value='+ret.metaList[0].yxcjdw+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+				
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-cldw-1">影像处理单位</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-cldw-1" name="yxcldw" disabled value='+ret.metaList[0].yxcldw+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sd-1">影像审定者</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-sd-1" name="yxsdr" disabled value='+ret.metaList[0].yxsdr+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sd-2">影像审定单位</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-sd-2" name="yxsddw" disabled value='+ret.metaList[0].yxsdr+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sd-3">影像审定时间</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" data-am-datepicker id="doc-data-sd-3" name="yxsdsj" disabled value='+ret.metaList[0].yxsdsj+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sjmj-2">数据密集</label>'+
+									'<div class="am-u-sm-8">'+
+										'<select id="doc-data-sjmj-2" name="sjmj" disabled>'+
+											'<option>'+ret.metaList[0].sjmj+'</option>'+
+										'</select>'+
+										'<span class="am-form-caret"></span>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-cqgs-2">知识产权归属</label>'+
+									'<div class="am-u-sm-8">'+
+										'<select id="doc-data-cqgs-2" disabled>'+
+											'<option>'+ret.metaList[0].cqgs+'</option>'+
+										'</select>'+
+										'<span class="am-form-caret"></span>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-shsj-1">审核时间</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" data-am-datepicker id="doc-data-shsj-1" name="shTime" disabled value='+ret.metaList[0].shTime+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-shr-1">审核人</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-shr-1" name="shPop" disabled value='+ret.metaList[0].shPop+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								
+							'</fieldset>'+
+						'</form>'+
+					'</div>';
+			$(".am-popup-inner").html(div);
+			$("#my-popup").modal('open');
+			if(ret.metaList[0].fwlx == "Geojson"){
+				loadBaiduMap(ret.list[0].address);
+			}else{
+				loadRestWMSMap(ret.list[0].address);
+			}
+		}
+	})
+}
+
+//编辑方法
+function edit(id){
+	$.ajax({
+		type:'post',
+		url: 'glAdmin!detail.action',
+		dataType: 'json',
+		data:{glId:id},
+		success:function(ret){
+			ret = eval(ret);
+				$.ajax({
+					type:'post',
+					url: 'categoryAdmin!execute.action',
+					dataType: 'json',
+			//		data: {categoryId:1},
+					success:function(rets){
+						rets = eval(rets);
+						var div = "";
+						for (var i = 0; i < rets.list.length; i++) {
+							if(rets.list[i].categoryName != "时相" && rets.list[i].categoryName != "服务类型"){
+								div += '<div class="am-form-group">'+
+								'<label class="am-u-sm-3 am-form-label">'+rets.list[i].categoryName+'</label>'+
+								'<div class="am-u-sm-8">'+
+									'<select name="'+rets.list[i].path+'" required>';
+										for(var j = 0; j < rets.list[i].categoryList.length; j++){
+												if(rets.list[i].categoryName == "分辨率"){
+														if(rets.list[i].categoryList[j].categoryName == ret.metaList[0].fbl){
+															div += '<option value="'+rets.list[i].categoryList[j].categoryName+'" selected>'+rets.list[i].categoryList[j].categoryName+'</option>';
+														}else {
+															div += '<option value="'+rets.list[i].categoryList[j].categoryName+'">'+rets.list[i].categoryList[j].categoryName+'</option>';
+														}
+												}else if(rets.list[i].categoryName == "卫星类型"){
+														if(rets.list[i].categoryList[j].categoryName == ret.metaList[0].wxlx){
+															div += '<option value="'+rets.list[i].categoryList[j].categoryName+'" selected>'+rets.list[i].categoryList[j].categoryName+'</option>';
+														}else {
+															div += '<option value="'+rets.list[i].categoryList[j].categoryName+'">'+rets.list[i].categoryList[j].categoryName+'</option>';
+														}
+												}
+										}
+									div += '</select>'+
+									'<span class="am-form-caret"></span>'+
+								'</div>'+
+								'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'
+							}
+						}
+						$("#categorySelect").html(div);
+					},
+					error: function(ret, ret1, ret2) {
+						debugger;
+					}
+				})
+			var div='';
+			
+			div+=	'<div class="am-popup-hd">'+
+						'<h4 class="am-popup-title">编辑</h4>'+
+						'<span data-am-modal-close class="am-close">&times;</span>'+
+					'</div>'+
+					'<div class="am-popup-bd">'+
+						'<form id="serviceForm" name="serviceForm"  data-am-validator action="admin/glAdmin!update.action" class="am-form am-form-horizontal" method="post" enctype="multipart/form-data">'+
+							'<fieldset>'+
+								'<legend>服务更新</legend>'+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label">服务展示</label>'+
+									'<div class="am-u-sm-8">'+
+										'<div style="width:100%;height:300px;" id="dituContent"></div>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>';
+								if(ret.metaList[0].fwlx == "Geojson"){
+									div +='<div class="am-form-group am-form-file">'+
+										'<label class="am-u-sm-3 am-form-label"></label>'+
+										'<div class="am-u-sm-8 am-cf">'+
+											'<button type="button" class="am-btn am-btn-success am-btn-sm">'+
+												'<i class="am-icon-cloud-upload"></i> 更改服务'+
+											'</button>'+
+											'<input name="afileToUpload" class="tszf" id="afileToUpload" type="file" onchange="fileSelected(this);"/>'+
+											'<span id="file-list" id="imgs1"></span>'+
+											'<input type="hidden" id="arltGeo" name="arltGeo" placeholder="" value='+ret.list[0].address+' required>'+
+											'<a class="am-btn am-btn-default am-btn-sm am-fr" id="sc" href="javascript:uploadFile();">'+
+												'<i class="am-icon-cloud-upload"></i>上传'+
+											'</a>'+
+										'</div>'+
+										'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+									'</div>';
+								}else{
+									div +='<div class="am-form-group">'+
+										'<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">ArcGisServer服务地址</label>'+
+										'<div class="am-u-sm-8">'+
+										    '<input type="url" id="arltWms" class="tszf" name="arltWms" value="'+ret.list[0].address+'" onBlur="loadRestMap(\''+ret.list[0].address+'\')" placeholder="请输入服务地址" required/>'+
+										'</div>'+
+										'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+									'</div>';
+								}
+								div +='<input type="hidden" id="glId" name="glId" placeholder="" value='+ret.list[0].glId+' required>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-ipt-num-2">服务编号</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-ipt-num-2" name="glNumber" placeholder="请点击右上角上传按钮" required value='+ret.list[0].glNumber+' readonly>'+
+										'<input type="text" id="editImgName" name="editImgName" value='+ret.list[0].imgPath+' required readonly>'+
+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">服务名称</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-ipt-name-1" name="glName" placeholder="请输入服务名称" required value='+ret.list[0].glName+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-ta-1">描述</label>'+
+									'<div class="am-u-sm-8">'+
+										'<textarea rows="5" id="doc-ta-1" name="content" required>'+ret.list[0].content+'</textarea>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<legend>元数据信息</legend>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-dir-1">方位描述</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-dir-1" name="fwContent" placeholder="请输入方位描述" value='+ret.metaList[0].fwContent+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1">地理信息坐标</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zdx" placeholder="最大X坐标" value='+ret.metaList[0].zdx+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1"></label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zdy" placeholder="最大Y坐标" value='+ret.metaList[0].zdy+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1"></label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zxx" placeholder="最小X坐标" value='+ret.metaList[0].zxx+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-x-1"></label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-x-1" name="zxy" placeholder="最小Y坐标" value='+ret.metaList[0].zxy+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+								
+								'<div id="categorySelect"></div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-date-1">时相</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-date-1" name="sx" readonly required value='+ret.metaList[0].sx+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-ly-1">来源</label>'+
+									'<div class="am-u-sm-8">'+
+										'<select id="doc-data-ly-1"  name="yxSource">';
+											if(ret.metaList[0].yxSource == "option1"){
+												div += '<option value="option1" selected>option1</option>'+
+														'<option value="option2">option2</option>'+
+														'<option value="option3">option3</option>';
+											}else if(ret.metaList[0].yxSource == "option2"){
+												div += '<option value="option1">option1</option>'+
+														'<option value="option2" selected>option2</option>'+
+														'<option value="option3">option3</option>';
+											}else if(ret.metaList[0].yxSource == "option3"){
+												div += '<option value="option1">option1</option>'+
+														'<option value="option2">option2</option>'+
+														'<option value="option3" selected>option3</option>';
+											}
+										div+='</select>'+
+										'<span class="am-form-caret"></span>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-cjdw-1">原始影像采集单位</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-cjdw-1" name="yxcjdw" placeholder="请输入原始影像采集单位" value='+ret.metaList[0].yxcjdw+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+				
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-cldw-1">影像处理单位</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-cldw-1" name="yxcldw" placeholder="请输入影像处理单位" value='+ret.metaList[0].yxcldw+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sd-1">影像审定者</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-sd-1" name="yxsdr" placeholder="请输入影像审定者" value='+ret.metaList[0].yxsdr+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sd-2">影像审定单位</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-sd-2" name="yxsddw" placeholder="请输入影像审定单位" value='+ret.metaList[0].yxsdr+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sd-3">影像审定时间</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-sd-3" name="yxsdsj" value='+ret.metaList[0].yxsdsj+' readonly>'+
+									'</div>'+
+									'<span class="am-u-sm-1"></span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-shr-1">审核人</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-shr-1" name="shPop" placeholder="请输入审核人" required value='+ret.metaList[0].shPop+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-shsj-1">审核时间</label>'+
+									'<div class="am-u-sm-8">'+
+										'<input type="text" id="doc-data-shsj-1" name="shTime" readonly required value='+ret.metaList[0].shTime+'>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-sjmj-2">数据密集</label>'+
+									'<div class="am-u-sm-8">'+
+										'<select id="doc-data-sjmj-2" name="sjmj">';
+											if(ret.metaList[0].sjmj == "公开"){
+												div += '<option value="公开" selected>公开</option>'+
+														'<option value="不公开">不公开</option>';
+											}else if(ret.metaList[0].sjmj == "不公开"){
+												div += '<option value="公开">公开</option>'+
+														'<option value="不公开" selected>不公开</option>';
+											}
+										div+='</select>'+
+										'<span class="am-form-caret"></span>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+					
+								'<div class="am-form-group">'+
+									'<label class="am-u-sm-3 am-form-label" for="doc-data-cqgs-2">知识产权归属</label>'+
+									'<div class="am-u-sm-8">'+
+										'<select id="doc-data-cqgs-2" name="cqgs">';
+											if(ret.metaList[0].cqgs == "本单位"){
+												div += '<option value="本单位" selected>本单位</option>'+
+														'<option value="采集单位">采集单位</option>'+
+														'<option value="收藏单位">收藏单位</option>';
+											}else if(ret.metaList[0].cqgs == "采集单位"){
+												div += '<option value="本单位">本单位</option>'+
+														'<option value="采集单位" selected>采集单位</option>'+
+														'<option value="收藏单位">收藏单位</option>';
+											}else if(ret.metaList[0].cqgs == "收藏单位"){
+												div += '<option value="本单位">本单位</option>'+
+														'<option value="采集单位">采集单位</option>'+
+														'<option value="收藏单位" selected>收藏单位</option>';
+											}
+										div += '</select>'+
+									'</div>'+
+									'<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>'+
+								'</div>'+
+
+								'<br>'+
+								'<p class="am-text-center">'+
+									'<button type="submit" id="submitFrom" class="am-btn am-btn-primary">提　交</button>'+
+								'</p>'+
+							'</fieldset>'+
+						'</form>'+
+					'<div>'
+
+			$(".am-popup-inner").html(div);
+			$('#doc-data-shsj-1,#doc-data-date-1,#doc-data-sd-3').datepicker();
+			$("#my-popup").modal('open');
+			if(ret.metaList[0].fwlx == "Geojson"){
+				loadBaiduMap(ret.list[0].address);
+			}else{
+				loadRestWMSMap(ret.list[0].address);
+			}
+			//文件上传
+			$('#afileToUpload').on('change', function() {
+				var fileNames = '';
+				$.each(this.files, function() {
+					fileNames += '<span class="am-badge">' + this.name + '</span>';
+				});
+				$('#file-list').html(fileNames);
+			});
+
+			//表单验证
+			var parrent = /[~!@#$%\^\+\*&\\\/\?\|:\{}()';="]/;
+			var $form = $('#serviceForm');
+			$form.validator({
+				validate:function(validity){
+					var $this = $(validity.field);
+					if(!$this.is('.tszf')){
+						if(parrent.test($this.val())){
+							layer.open({
+								icon: 2,
+								content: '不允许输入特殊字符',
+								yes:function(index,layero){
+									layer.close(index);
+								}
+							});  
+							setTimeout($this.val(""),2000);
+							return false;
+						}
+					}
+				}
+			});
+			
+			$('#submitFrom').click(function(){
+				if($("#arltGeo").val() != undefined){
+					if($("#arltGeo").val().length==0){
+						layer.open({
+							icon: 2,
+							content: '请点击右侧上传按钮上传',
+							yes:function(index,layero){
+								layer.close(index);
+							}
+						}); 
+						return false;
+					}else{
+						if(ret.list[0].address.split("/").pop().replace(/(^id_)|(\.\S+$)/g,"") != $('#arltGeo').val().split("/").pop().replace(/(^id_)|(\.\S+$)/g,"")){
+							editNewImg();
+						}
+					}
+				}else{
+					if(ret.list[0].address != $('#arltWms').val()){
+						editNewImg();
+					}
+				}
+			})
+
+			$("#afileToUpload").change(function(){
+				var filepath=$(this).val();
+	    		//获得上传文件名
+	    		var fileArr=filepath.split("\\");
+	    		var fileTArr=fileArr[fileArr.length-1].toLowerCase().split(".");
+	    		var filetype=fileTArr[fileTArr.length-1];
+		   		 //切割出后缀文件名
+		   		 if(filetype != "geojson"){
+		   		 	$(this).val("");
+		   		 	layer.open({
+						icon: 2,
+						content: '只允许上传geojson格式的文件',
+						yes:function(index,layero){
+							layer.close(index);
+						}
+					});
+		   		 	return false;
+		   		 }
+			})
+		}
+	})
+}
+
+//删除方法
+function deletesc(id){
+	layer.confirm('确认删除吗？', {
+		btn: ['确认', '离开'],
+		btn2: function(index, layero){
+			layer.close(index);
+		}
+	}, function(index){
+		$.ajax({
+			type:'post',
+			url: "glAdmin!delete.action", //url, //
+	        data: {"glId":id},
+			dataType: 'json',
+			success:function(ret){
+				var data = JSON.stringify(ret);
+				layer.open({
+					icon: 1,
+					content: '删除成功!',
+					yes:function(index,layero){
+						location.href=location.href;
+						layer.close(index);
+					}
+				});  
+			},
+			error: function(ret, ret1, ret2) {
+				debugger;
+			}
+		})
+	});
+}
+

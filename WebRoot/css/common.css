@@ -1,0 +1,51 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-19 16:35:03
+ * @version $Id$
+ */
+ *{
+ 	margin: 0;
+ 	padding: 0;
+ }
+ body{
+ 	font-size: 12px;
+ }
+ table{
+ 	border-spacing: 0;
+ 	border-collapse: collapse;
+ }
+ fieldset,img{
+ 	border: 0;
+ }
+ a,a:hover{
+ 	text-decoration: none;
+ 	color: #000;
+ }
+ ol,ul{
+ 	list-style: none;
+ }
+ h1,h2,h3,h4,h5,h6{
+ 	font-size: 100%;
+ 	font-weight: normal;
+ }
+ .clearfix::before,.clearfix::after{
+ 	line-height: 0;
+ 	display: block;
+ 	visibility: hidden;
+ 	clear: both;
+ 	height: 0;
+ 	content: '';
+ }
+ .clearfix{
+ 	zoom: 1;
+ }
+ .clearfix > li{
+ 	float: left;
+ }
+ input,button{
+ 	border: 0;
+ 	outline: none;
+ }
+

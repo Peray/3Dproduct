@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="metadataMap">
+    
+    <typeAlias alias="metadata" type="com.eastdawn.po.Metadata"/>
+    
+    <resultMap id="metadata-resultMap" class="metadata" >
+    	<result property="dataId" column="data_Id"/>
+		<result property="dataName" column="data_Name"/>
+		<result property="fwContent" column="fw_Content"/>
+		<result property="xyz" column="xyz"/>
+		<result property="imageName" column="image_Name"/>
+		<result property="fbl" column="fbl"/>
+		<result property="yxArea" column="yx_Area"/>
+		
+		<result property="yxSjl" column="yx_Sjl"/>
+		<result property="yxType" column="yx_Type"/>
+		<result property="yxNewTime" column="yx_NewTime"/>
+		<result property="yxSource" column="yx_Source"/>
+		<result property="yxcjdw" column="yxcjdw"/>
+		<result property="yxcldw" column="yxcldw"/>
+		<result property="yxfw" column="yxfw"/>
+		<result property="yxsdr" column="yxsdr"/>
+		<result property="yxsddw" column="yxsddw"/>
+		<result property="yxsdsj" column="yxsdsj"/>
+		
+		<result property="sjmj" column="sjmj"/>
+		<result property="cqgs" column="cqgs"/>
+		<result property="qtOne" column="qt_One"/>
+		<result property="qtTwo" column="qt_Two"/>
+		<result property="txPop" column="tx_Pop"/>
+		<result property="txTime" column="tx_Time"/>
+		<result property="shPop" column="sh_Pop"/>
+		<result property="shTime" column="sh_Time"/>
+		<result property="parentId" column="parent_Id"/>
+    </resultMap>
+    
+    <select id="queryMetadataByPage"  resultMap="metadata-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_metadata
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="dataId"> 
+  				and data_Id = #dataId#
+  			</isNotEmpty>
+  			<isNotEmpty property="parentId"> 
+  				and parent_Id = #parentId#
+  			</isNotEmpty>
+        </dynamic>
+     </select>	
+     
+     <select id="getMetadataCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_metadata
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotEmpty property="dataId"> 
+	  				and data_Id = #dataId#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="parentId"> 
+	  				and parent_Id = #parentId#
+	  			</isNotEmpty>
+			</dynamic>
+ 	</select>
+ 	
+ 	 <!-- 元数据添加 -->
+     <insert id="add" parameterClass="metadata"> 
+	 	insert into tb_metadata(data_Name,fw_Content,xyz,image_Name,fbl,yx_Area,yx_Sjl,yx_Type,yx_NewTime,yx_Source,yxcjdw,yxcldw,yxfw,yxsdr,yxsddw,yxsdsj,sjmj,cqgs,qt_One,qt_Two,tx_Pop,tx_Time,sh_Pop,sh_Time,parent_Id) values (#dataName#,#fwContent#,#xyz#,#imageName#,#fbl#,#yxArea#,#yxSjl#,#yxType#,#yxNewTime#,#yxSource#,#yxcjdw#,#yxcldw#,#yxfw#,#yxsdr#,#yxsddw#,#yxsdsj#,#sjmj#,#cqgs#,#qtOne#,#qtTwo#,#txPop#,#txTime#,#shPop#,#shTime#,#parentId#)
+ 	 </insert>
+ 	  <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_metadata where parent_Id=#parentId#
+ 	 </delete>
+ 	 <update id="updateById" parameterClass="metadata">
+	  	update tb_metadata set data_Name = #dataName#,fw_Content = #fwContent#,xyz = #xyz#,image_Name = #imageName#,fbl = #fbl#,yx_Area = #yxArea#,yx_Sjl = #yxSjl#,yx_Type = #yxType#,yx_NewTime = #yxNewTime#,yx_Source = #yxSource#,yxcjdw = #yxcjdw#,yxcldw = #yxcldw#,yxfw = #yxfw#,yxsdr = #yxsdr#,yxsddw = #yxsddw#,yxsdsj = #yxsdsj#,sjmj = #sjmj#,cqgs = #cqgs#,qt_One = #qtOne#,qt_Two = #qtTwo#,tx_Pop = #txPop#,tx_Time = #txTime#,sh_Pop = #shPop#,sh_Time = #shTime#,parent_Id = #parentId#
+	  	where parent_Id=#parentId#
+	 </update>
+</sqlMap>

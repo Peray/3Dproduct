@@ -1,0 +1,187 @@
+package com.eastdawn.po;
+
+import java.io.Serializable;
+import java.util.Date;
+
+@SuppressWarnings("serial")
+public class Metadata implements Serializable {
+	
+	private Long dataId;//数据ID
+	private String dataName;//数据名称
+	private String fwContent;//方位描述
+	private String xyz;//地理信息坐标
+	
+	private String imageName;//影像名称
+	private String fbl;//影像分辨率
+	private String yxArea;//影像范围
+	private String yxSjl;//影像数据量
+	private String yxType;//影像类型
+	private String yxNewTime;//影像生成时间
+	private String yxSource;//影像来源
+	private String yxcjdw;//原始影像采集单位
+	private String yxcldw;//影像处理单位
+	private String yxfw;//影像范围两点
+	private String yxsdr;//影像审定这
+	private String yxsddw;//影像审定单位
+	private String yxsdsj;//影像审定时间
+	private String sjmj;//数据密集
+	private String cqgs;//知识产权归属
+    private String qtOne;//其他1
+    private String qtTwo;//其他2
+    private String txr;//填写人
+    private Date txTime;//填写时间
+    private String shr;//审核人
+    private Date shTime;//审核时间
+    
+	public Long getDataId() {
+		return dataId;
+	}
+	public void setDataId(Long dataId) {
+		this.dataId = dataId;
+	}
+	public String getDataName() {
+		return dataName;
+	}
+	public void setDataName(String dataName) {
+		this.dataName = dataName;
+	}
+	public String getFwContent() {
+		return fwContent;
+	}
+	public void setFwContent(String fwContent) {
+		this.fwContent = fwContent;
+	}
+	public String getXyz() {
+		return xyz;
+	}
+	public void setXyz(String xyz) {
+		this.xyz = xyz;
+	}
+	public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+	public String getFbl() {
+		return fbl;
+	}
+	public void setFbl(String fbl) {
+		this.fbl = fbl;
+	}
+	public String getYxArea() {
+		return yxArea;
+	}
+	public void setYxArea(String yxArea) {
+		this.yxArea = yxArea;
+	}
+	public String getYxSjl() {
+		return yxSjl;
+	}
+	public void setYxSjl(String yxSjl) {
+		this.yxSjl = yxSjl;
+	}
+	public String getYxType() {
+		return yxType;
+	}
+	public void setYxType(String yxType) {
+		this.yxType = yxType;
+	}
+	public String getYxNewTime() {
+		return yxNewTime;
+	}
+	public void setYxNewTime(String yxNewTime) {
+		this.yxNewTime = yxNewTime;
+	}
+	public String getYxSource() {
+		return yxSource;
+	}
+	public void setYxSource(String yxSource) {
+		this.yxSource = yxSource;
+	}
+	public String getYxcjdw() {
+		return yxcjdw;
+	}
+	public void setYxcjdw(String yxcjdw) {
+		this.yxcjdw = yxcjdw;
+	}
+	public String getYxcldw() {
+		return yxcldw;
+	}
+	public void setYxcldw(String yxcldw) {
+		this.yxcldw = yxcldw;
+	}
+	public String getYxfw() {
+		return yxfw;
+	}
+	public void setYxfw(String yxfw) {
+		this.yxfw = yxfw;
+	}
+	public String getYxsdr() {
+		return yxsdr;
+	}
+	public void setYxsdr(String yxsdr) {
+		this.yxsdr = yxsdr;
+	}
+	public String getYxsddw() {
+		return yxsddw;
+	}
+	public void setYxsddw(String yxsddw) {
+		this.yxsddw = yxsddw;
+	}
+	public String getYxsdsj() {
+		return yxsdsj;
+	}
+	public void setYxsdsj(String yxsdsj) {
+		this.yxsdsj = yxsdsj;
+	}
+	public String getSjmj() {
+		return sjmj;
+	}
+	public void setSjmj(String sjmj) {
+		this.sjmj = sjmj;
+	}
+	public String getCqgs() {
+		return cqgs;
+	}
+	public void setCqgs(String cqgs) {
+		this.cqgs = cqgs;
+	}
+	public String getQtOne() {
+		return qtOne;
+	}
+	public void setQtOne(String qtOne) {
+		this.qtOne = qtOne;
+	}
+	public String getQtTwo() {
+		return qtTwo;
+	}
+	public void setQtTwo(String qtTwo) {
+		this.qtTwo = qtTwo;
+	}
+	public String getTxr() {
+		return txr;
+	}
+	public void setTxr(String txr) {
+		this.txr = txr;
+	}
+	public Date getTxTime() {
+		return txTime;
+	}
+	public void setTxTime(Date txTime) {
+		this.txTime = txTime;
+	}
+	public String getShr() {
+		return shr;
+	}
+	public void setShr(String shr) {
+		this.shr = shr;
+	}
+	public Date getShTime() {
+		return shTime;
+	}
+	public void setShTime(Date shTime) {
+		this.shTime = shTime;
+	}
+	
+}

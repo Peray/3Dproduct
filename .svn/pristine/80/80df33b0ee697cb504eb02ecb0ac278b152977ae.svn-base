@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>元数据查看</title>
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/frame.css">
+	<link rel="stylesheet" href="css/service.css">
+	<link rel="stylesheet" href="css/banner.css" />
+</head>
+<body>
+	<header>
+		<img class="logo" src="img/banner/logo1.png" alt="">
+		<nav class="clearfix">
+			<ul class="clearfix">
+				<li><img src="img/01_03.png" alt="三维展示"><a href="">三维展示</a></li>
+				<li><img src="img/02_05.png" alt="服务资源"><a href="service.html">服务资源</a></li>
+				<li><img src="img/03_07.png" alt="典型应用"><a href="">典型应用</a></li>
+				<li><img src="img/04_09.png" alt="我的资源"><a href="own.html">我的资源</a></li>
+				<li><img src="img/05_11.png" alt="运维管理"><a href="">运维管理</a></li>
+			</ul>
+			<div class="sign-in">
+				<img src="img/zc_13.png" alt="登录/注册">
+				<a href="login.html" class="text">注册</a>
+				<span>|</span>
+				<a href="login.html" class="text">登录</a>
+			</div>
+		</nav>	
+	</header>
+	<article>
+		<div class="out">
+			<ul class="tu">
+				<li><a href="#"><img src="img/banner/2.jpg" style="width:100%;height:150px;" /></a></li>
+				<li><a href="#"><img src="img/banner/3.jpg" style="width:100%;height:150px;" /></a></li>
+				<li><a href="#"><img src="img/banner/5.jpg" style="width:100%;height:150px;" /></a></li>
+			</ul>
+			<ul class="shu">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+			<div class="search clearfix">
+				<input class="input-l" type="text" value="" placeholder="请输入关键字查询">
+				<input class="input-r" type="button" value="服务检索">
+			</div>
+		</div>
+	</article>
+	<section class="clearfix">
+		<div class="title clearfix">
+			<p>
+				<a href="javascript:void(0);">首页</a>
+				<a class="icon" href="javascript:void(0);">></a>
+				<a href="javascript:void(0);">服务资源</a>
+				<a class="icon" href="javascript:void(0);">></a>
+				<a href="javascript:void(0);">国家基础测绘地理信息最新</a>
+			</p>
+			<p>&nbsp;</p>
+		</div>
+		<h1 class="tite">国家基础测绘地理信息最新</h1>
+		<h2 class="tite">国家基础测绘地理信息最新</h2>
+		<div class="mes">
+			<h2>服务基本信息</h2>
+			<table class="table-info">
+				<tbody>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">服务URL</td>
+						<td>http://t0.tianditu.com/vec_c/wmts</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">服务名称</td>
+						<td>国家基础测绘地理信息最新</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">服务简介</td>
+						<td>国家基础测绘地理信息最新</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">关键字</td>
+						<td>矢量地图</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">服务类型</td>
+						<td>OGC WMTS</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">主题分类</td>
+						<td>基础地理框架数据</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">覆盖区域</td>
+						<td>全球</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">坐标系</td>
+						<td>CGCS2000</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">投影类型</td>
+						<td>经纬度</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">使用权限</td>
+						<td>公开</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">服务预览</td>
+						<td>http://t0.tianditu.com/vec_c/wmts</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">周期更新</td>
+						<td>实时</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="mes">
+			<h2>图层基本信息</h2>
+			<table class="table-info">
+				<tbody>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">图层名称</td>
+						<td>vec</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">图层简介</td>
+						<td>国家基础测绘地理信息最新</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">关键字</td>
+						<td>矢量地图</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">覆盖区域</td>
+						<td>全球</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">服务范围</td>
+						<td>左上角经度：-180</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond"></td>
+						<td>左上角纬度：-90</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond"></td>
+						<td>右上角经度：180</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond"></td>
+						<td>右上角纬度：90</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">坐标系</td>
+						<td>CGCS2000</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">投影类型</td>
+						<td>经纬度</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">发布时间</td>
+						<td>2010-10-20</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">上次更新时间</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">更新周期</td>
+						<td>大于一年</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">预览图</td>
+						<td class="tdthird">
+							<img src="img/pic2_30.png" alt="预览图">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="mes">
+			<h2>服务联系信息</h2>
+			<table class="table-info">
+				<tbody>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">发布机构</td>
+						<td>国家基础地理信息中心</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">地址</td>
+						<td>北京市海淀区中关村</td>
+					</tr>
+					<tr>
+						<td class="tdfirst"></td>
+						<td class="tdsecond">网站</td>
+						<td>国家基础测绘地理信息最新</td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">联系人</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">联系人电话</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="tdfirst">
+							<font color="red">*</font>
+						</td>
+						<td class="tdsecond">联系人邮箱</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+	<footer>
+		<div class="footer">
+			<p class="fp">
+				<a href="javascript:void(0);">联系我们</a>
+				<span>|</span>
+				<a href="javascript:void(0);">服务说明</a>
+				<span>|</span>
+				<a href="javascript:void(0);">意见反馈</a>
+			</p>
+			<!-- <p>
+				<a href="javascript:void(0);">国家测绘地理信息局&nbsp;&nbsp;监制</a>
+				<a href="javascript:void(0);">国家基础地理信息中心&nbsp;&nbsp;版权所有</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">甲测资字1100222</a>
+				<a href="javascript:void(0);">京ICP备1200922号-2</a>
+				<a href="javascript:void(0);">京公安网备1101080201222</a>
+			</p> -->
+		</div>
+	</footer>
+
+	<script src="js/jquery-1.8.1.min.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/banner.js"></script>
+	<script src="js/service.js"></script>
+</body>
+</html>

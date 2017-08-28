@@ -1,0 +1,121 @@
+'use strict';
+/**
+ * index.js
+ * @authors Your Name (you@example.org)
+ * @date    2017-06-20 11:27:49
+ * @version $Id$
+ */
+
+ //hover
+
+var $detial_li = $(".detial li");
+
+var imgSrc,imgSrc1,str,index;
+
+$("#typeMenu").on("mouseover mouseout","li",function(event){
+
+	if(event.type == "mouseover"){
+
+		index = $(this).index();
+
+		imgSrc = $(this).find("img")[0].src;
+	
+	//	str = imgSrc.substring(imgSrc.length-10, imgSrc.length-8);
+
+		imgSrc1 = imgSrc.replace('img/1','img/2');
+
+		$(this).find("img").attr("src",imgSrc1);
+
+		// if(index == 2){
+		// 	$(this).find(".detial").css("left",(index-1)*192+25).show();
+
+		// 	$(this).find(".detial").children('span').css("left",(index-1)*192+50);
+
+		// }else if(index == 3){
+		// 	$(this).find(".detial").css("left",((index-2)*192)+25).show();
+
+		// 	$(this).find(".detial").children('span').css("left",(index-1)*192+50);
+
+		// }else if(index == 4){
+		// 	$(this).find(".detial").css("left",((index-2)*192)+25).show();
+
+		// 	$(this).find(".detial").children('span').css("left",(index-2)*192+50);
+
+		// }else{
+
+		// 	$(this).find(".detial").css("left",(index*192)+25).show();
+		// }
+	}else if(event.type == "mouseout"){
+
+		$(this).find("img").attr("src",imgSrc);
+
+		// $(this).find(".detial").hide();
+	}
+})
+
+
+
+
+$("#typeMenu").on("click","li figure",function(){
+	if($(".sign-in>a").text() == "登录"){
+		layer.open({
+			icon: 5,
+			// closeBtn:2,
+			content: '请先登录！',
+			yes:function(index,layero){
+				window.location.href="login.html";
+				layer.close(index);
+			}
+		});  
+	}else{
+		var index = $(this).parent("li").index();
+		switch (index) {
+			case 0:window.location.href="1.html"
+			break;
+
+			case 1:window.location.href="service.html"
+			break;
+
+			case 2:window.location.href="2.html"
+			break;
+
+			case 3:window.location.href="own.html"
+			break;
+
+			case 4:window.location.href="admin/index.html"
+			break;
+
+			default:window.location.href="index.html"
+			break;
+		}
+	}
+})
+
+$(".tips>span").click(function(){
+	$(".tips").fadeOut();
+})
+
+//关键字查询跳转方法
+window.onload=function(){
+	var otxt=document.getElementById("keys");
+	otxt.oninput=function(){
+		if((/[\u4e00-\u9fa5]+/).test(otxt.value)){
+			localStorage.setItem("key",otxt.value);
+			location.href = "service.html";
+		}
+	}
+	var cpLock = false;
+    $('#keys').on('compositionstart', function () {
+        cpLock = true;
+    });
+    $('#keys').on('compositionend', function () {
+        cpLock = false;
+    });
+    $('#keys').on('input', function () {
+        if (!cpLock) {
+            localStorage.setItem("key",otxt.value);
+		    location.href = "service.html";
+        }
+    });
+}
+

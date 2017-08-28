@@ -1,0 +1,366 @@
+﻿var j = 0, count = 0;
+var map,fileUrl;
+var view;
+var pointXList = [];
+var pointYList = [];
+var Xmin,Ymin,Xmax,Ymax;
+function fileSelected(obj) {
+	$('#dituContent').empty();
+	$('#arltGeo').val("");
+    var file=null; 
+    file = document.getElementById('afileToUpload').files; 
+    for (var i = 0; i < file.length;i++) {
+        var html = "";
+		fileUrl = window.URL.createObjectURL(file[i]);
+		html += "<img src='"+fileUrl+"' data-action='zoom'/>"+
+			"<span class='del' onclick='del()'>删除</span>"
+    }
+	$("#imgs1").html(html)
+    count=file.length;
+    $('.am-map').show();
+	    loadBaiduMap(fileUrl);
+//    uploadFile();
+} 
+
+$(document).on('click', '.remove', function () {
+    var idx = $(this).parent().prevAll().length;
+    $(this).parent().remove(); 
+    var al = $('#arltGeo').val().split('img');
+    al.splice(idx, 1);
+    var values = "";
+    for (var i = 1; i < al.length; i++) {
+        values +="img" +al[i];
+    }
+    $('#arltGeo').val(values);
+});
+
+$(document).on('click', '.removePic', function () {
+    var idx = $(this).parent().prevAll().length;
+    $(this).parent().remove();
+    var al = $('#rlt').val().split('img');
+    al.splice(idx, 1);
+    var values = "";
+    for (var i = 1; i < al.length; i++) {
+        values += "img" + al[i];
+    }
+    $('#rlt').val(values);
+});
+
+function uploadFile() {
+    var fd = new FormData(); 
+    if(document.getElementById('afileToUpload').files[j] == null){
+     return;
+    }
+    fd.append("afileToUpload", document.getElementById('afileToUpload').files[j]); 
+    var xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+            if (percentComplete != 100) {
+                $('#progressNumber' + j).text(percentComplete.toString() + '%');
+            } else {
+                $('#progressNumber' + j).text("上传完成!");
+            }
+        }
+        else {
+            $('#progressNumber' + j).text("无法计算!");
+        }
+    }, false);
+    xhr.addEventListener("load", uploadComplete, false);
+    xhr.addEventListener("error", uploadFailed, false);
+    xhr.addEventListener("abort", uploadCanceled, false);
+    xhr.open("POST", "../UploadFile.do");
+    xhr.send(fd);
+    $('.upfile').hide();
+    $('.upfile>a').remove();
+}
+
+function uploadComplete(evt) {
+    /* This event is raised when the server send back a response */ 
+    var rlt = evt.target.responseText;
+    if (rlt.length > 1) {  
+	    $('#arltGeo').val(system.pturl+ rlt); 
+	     $.ajax({
+			type:'post',
+			url: 'glAdmin!searchNumber.action',
+			dataType: 'json',
+			success:function(ret){
+				ret = eval(ret);
+				var str = rlt.substr(rlt.indexOf('/')+1,8);
+				var number = parseInt(ret.num)+1;
+				var num = "";
+				for(var i=0; i< 6; i++){
+					num += Math.floor(Math.random()*10);
+				}
+				$('#doc-ipt-num-1').val("geojson"+str+number);
+				$('#imgName').val("geojson"+str+number+"_"+num);
+			}
+		})
+    }
+}
+
+function uploadFailed(evt) {
+    alert(evt+"上传失败.");
+}
+
+function uploadCanceled(evt) {
+    alert("取消上传.");
+}
+//删除
+function del(){
+	var Imgnode =  $("#arltGeo").val();
+	Imgsub = Imgnode.substring(4); 
+	$.ajax({
+		url:'glAction!deleteFile.action',
+		data:{"fileName":Imgsub},
+		success:function(data){
+			if(data == 1){
+				alert("删除成功!")
+			}else{
+				alert("删除失败!")
+			}
+		},
+		error:function(){
+			
+		}
+	});
+	$("#imgs1").html('');
+	$("#arltGeo").val("");
+	
+	var jia = "";
+	jia += "<a href='javascript:;' class='a-upload' style='height: 20px;'>"+
+				"<span><img src='../img/timg.jpg' alt=''></span>"+
+				"<input type='file' name='afileToUpload' id='afileToUpload' onchange='fileSelected(this);' />"+
+			"</a>"
+	$(".upfile").show().html(jia);
+}
+
+//显示地图js
+function loadBaiduMap(url) {
+//	var mapDiv = document.getElementById("dituContent");
+//	var viewDiv =  document.getElementsByClassName("ol-viewport");
+//	if(viewDiv.length == 0){
+//		var projection = ol.proj.get("EPSG:3857");	
+//		var resolutions = [];
+//		for(var i=0; i<19; i++){
+//			resolutions[i] = Math.pow(2, 18-i);
+//		}
+//		var tilegrid  = new ol.tilegrid.TileGrid({
+//			origin: [0,0],
+//			resolutions: resolutions
+//		});
+//		var baidu_source = new ol.source.TileImage({
+//			crossOrigin: 'anonymous',
+//			projection: projection,
+//			tileGrid: tilegrid,
+//			tileUrlFunction: function(tileCoord, pixelRatio, proj){
+//				if(!tileCoord){
+//					return "";
+//				}
+//				var z = tileCoord[0];
+//				var x = tileCoord[1];
+//				var y = tileCoord[2];
+//		
+//				if(x<0){
+//					x = "M"+(-x);
+//				}
+//				if(y<0){
+//					y = "M"+(-y);
+//				}
+//		
+//				return "http://online3.map.bdimg.com/onlinelabel/?qt=tile&x="+x+"&y="+y+"&z="+z+"&styles=pl&udt=20151021&scaler=1&p=1";
+//			}
+//		});
+//		var baidu_layer = new ol.layer.Tile({
+//			source: baidu_source
+//		});
+//		view = new ol.View({
+//			center: [12959773,4853101],
+//			zoom: 4
+//		});
+//		map = new ol.Map({
+//			target: mapDiv,
+//			layers: [baidu_layer],
+//			controls: ol.control.defaults({
+//			attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+//				collapsible: false
+//			})
+//			}),
+//			view: view
+//		});
+//		loadGeoJson(url);
+//	}else{
+//		map.removeLayer(map.getLayers().getArray()[1]);
+//		pointXList = [];
+//		pointYList = [];
+//		Xmin = "";
+//		Ymin = "";
+//		Xmax = "";
+//		Ymax = "";
+//		loadGeoJson(url);
+//	}
+//	
+//	setTimeout(function () {
+//		var features = source.getFeatures();
+//		for(var i=0;i<features.length;i++){
+//			getXYFromFeature(features[i]);
+//		}
+//		getMaxMinfromArray();
+//		view.fit([Xmin,Ymin,Xmax,Ymax],{duration: 1000});
+//	}, 1000);
+//	 
+	loadGeoJson(url);
+}
+
+function loadGeoJson(url){
+	var tempurl = 'http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer';
+	var restSource = new ol.source.XYZ({
+		crossOrigin: 'anonymous',
+		attributions: [new ol.Attribution({
+			html: tempurl
+		})],
+		url: tempurl + '/tile/{z}/{y}/{x}'
+	});
+	var arcgisRestLayer = new ol.layer.Tile({
+		source: restSource
+	});
+	map = new ol.Map({
+		target: document.getElementById("dituContent"),
+		layers: [arcgisRestLayer],
+		view: new ol.View({
+			center: [11426140,4432391],
+			zoom: 4
+		})
+	});
+	
+	source = new ol.source.Vector({
+		url: url,
+		format: new ol.format.GeoJSON()
+	});
+	var vector = new ol.layer.Vector({
+		source: source
+	});
+	map.addLayer(vector);
+	setTimeout(function () {
+		var extent = source.getExtent();
+		map.getView().fit([extent[0],extent[1],extent[2],extent[3]],{duration: 1000});
+		var min = ol.proj.toLonLat([extent[0],extent[1]]);
+		var max = ol.proj.toLonLat([extent[2],extent[3]]);
+		$('#zdx').val(max[0]);
+		$('#zdy').val(max[1]);
+		$('#zxx').val(min[0]);
+		$('#zxy').val(min[1]);
+	}, 1000);
+}
+
+function loadRestMap() {
+	var url = $('#arltWms').val();
+	var tanchu = false;
+	if(url.length != 0){
+		$('#dituContent').empty();
+		$('.am-map').show();
+		var restSource = new ol.source.XYZ({
+		crossOrigin: 'anonymous',
+		attributions: [new ol.Attribution({
+			html: url
+		})],
+		url: url + '/tile/{z}/{y}/{x}'
+	});
+	var arcgisRestLayer = new ol.layer.Tile({
+		source: restSource
+	});
+	map = new ol.Map({
+		target: document.getElementById("dituContent"),
+		layers: [arcgisRestLayer],
+		view: new ol.View({
+			center: [11426140,4432391],
+			zoom: 4
+		})
+	});
+	restSource.addEventListener('tileloaderror',function(event){
+		$('.am-map').hide();
+		$('#arltWms').val("");
+		if(tanchu == false){
+			alert("地址输入有误");
+			tanchu = true;
+		}
+	});
+		
+	setTimeout(function () {
+		loadXYZ();
+	}, 4000);
+	}
+}
+//加载WMS获取坐标
+function loadXYZ() {
+		var extent = map.getView().calculateExtent();
+		var min = ol.proj.toLonLat([extent[0],extent[1]]);
+		var max = ol.proj.toLonLat([extent[2],extent[3]]);
+//		alert(max[0]);
+		 $("#zdx").val(max[0]);
+		 $("#zdy").val(max[1]);
+		 $("#zxx").val(min[0]);
+		 $("#zxy").val(min[1]);
+}
+//查看WMS服务方法
+function loadRestWMSMap(url) {
+	var tanchu = false;
+	if(url.length != 0){
+		$('#dituContent').empty();
+		$('.am-map').show();
+		var restSource = new ol.source.XYZ({
+			crossOrigin: 'anonymous',
+			attributions: [new ol.Attribution({
+				html: url
+			})],
+			url: url + '/tile/{z}/{y}/{x}'
+		});
+		var arcgisRestLayer = new ol.layer.Tile({
+			source: restSource
+		});
+		map = new ol.Map({
+			target: document.getElementById("dituContent"),
+			layers: [arcgisRestLayer],
+			view: new ol.View({
+				center: [11426140,4432391],
+				zoom: 4
+			})
+		});	
+		restSource.addEventListener('tileloaderror',function(event){
+			$('.am-map').hide();
+			$('#arltWms').val("");
+			if(tanchu == false){
+				alert("地址输入有误");
+				tanchu = true;
+			}
+		});
+	}
+}
+//生成缩略图
+function newImg(){    
+    map.once('postcompose', function(event) {
+      var canvas = event.context.canvas;
+      if (navigator.msSaveBlob) {
+        navigator.msSaveBlob(canvas.msToBlob(), 'map.png');
+      } else {
+        //canvas.toBlob(function(blob) {
+        //  saveAs(blob, 'map.png');
+        //});
+        var imgUrl = canvas.toDataURL('image/png');
+        var imgName = $('#imgName').val();
+        $.ajax({
+	        type: "post",
+	        url: "glAdmin!decodeBase64ToImage.action", //url, //
+	        data: {"sluUrl":imgUrl,"imgName":imgName},
+	        dataType: "text",
+	        success: function (ret) {
+	 			var data = JSON.stringify(ret);
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   	});
+      }
+    });
+    map.renderSync();
+}

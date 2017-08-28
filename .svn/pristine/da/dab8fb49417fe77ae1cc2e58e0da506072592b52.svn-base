@@ -1,0 +1,13 @@
+{"内陆水系县级行政中心":{"type":"FeatureCollection"
+,"features":[
+{"type":"Feature","geometry":{"type":"Point","coordinates":[98.0901558621184,36.3006879248976]},"properties":{"北纬":0,"FID":0,"Id":0,"东经":0,"name":"都兰"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[100.244346684536,38.1782067430851]},"properties":{"北纬":0,"FID":1,"Id":0,"东经":0,"name":"祁连"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[100.132183574091,37.3281030619021]},"properties":{"北纬":0,"FID":2,"Id":0,"东经":0,"name":"刚察"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[99.0224001144767,37.3021748706939]},"properties":{"北纬":0,"FID":3,"Id":0,"东经":0,"name":"天峻"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[98.474374403359,36.9318532370787]},"properties":{"北纬":0,"FID":4,"Id":0,"东经":0,"name":"乌兰"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[95.3404810370963,37.8654816246738]},"properties":{"北纬":0,"FID":5,"Id":0,"东经":0,"name":"大柴旦"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[97.3686665448074,37.3768276978381]},"properties":{"北纬":0,"FID":6,"Id":0,"东经":0,"name":"德令哈市"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[94.8951796927731,36.4038620030379]},"properties":{"北纬":0,"FID":7,"Id":0,"东经":0,"name":"格尔木市"}}
+,{"type":"Feature","geometry":{"type":"Point","coordinates":[90.868947069479,38.2530064076344]},"properties":{"北纬":0,"FID":8,"Id":0,"东经":0,"name":"茫崖"}}
+]}
+}

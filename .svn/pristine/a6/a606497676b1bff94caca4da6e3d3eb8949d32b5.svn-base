@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>三维系统</title>
+	<meta charset="utf-8">
+	<script src="library/Cesium/Cesium.js"></script>
+	<script src="scripts/util.js"></script>
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="library/Cesium/Widgets/widgets.css">
+	<link rel="stylesheet" href="css/filmstrip.css">
+	<link rel="stylesheet" href="css/info.css">
+	<link rel="stylesheet" href="css/thumbnail.css">
+	<link rel="stylesheet" href="css/view.css">
+	<script src="library/knockout-3.1.0.js"></script>
+	<script src="library/chroma.js"></script>
+	<script type="scripts/lodash.min.js"></script>
+</head>
+<body>
+	<style>
+		#infoboxce{
+			width:100%;
+			height:100%;
+		}
+		#HelpContainerBG{
+			display:none;
+		}
+	</style>
+	<div class="logo">
+		<a href="../index.html"><img src="../img/theme3/logo3.png" alt=""></a>
+	</div>
+	<div id="cesiumContainer"></div>
+	<div id="infobox">
+		<div id='infoboxce'></div>
+	</div>
+	<div id="HelpContainerBG"></div>
+	<div id="Import" class="fade">
+		<div class="myform">
+			<div class="Input3d">
+				<div class="form-group">
+					<label class="labell">导入文件：</label>
+					<input class="wenjian" type="text" readonly>
+					<span>
+						<a href="javascript:;" class="file">加载
+							<input type="file" accept=".json" name="" id="inputFile">
+						</a>
+					</span>
+				</div>
+				<div class="form-group">
+					<label class="labell">图层名称：</label>
+					<input type="text" class="tcmc" />
+				</div>
+				<div class="form-group fr">
+					<button class="btn btn-primary" onclick="importGeojson()">保存</button>
+				</div>
+			</div>
+			<div class="Input2d">
+				<div class="form-group">
+					<label class="labell">导入文件：</label>
+					<input class="wenjian" type="text" readonly>
+					<span>
+						<a href="javascript:;" class="file">加载
+							<input type="file" accept=".json" name="" id="inputFile2">
+						</a>
+					</span>
+				</div>
+				<div class="form-group">
+					<label class="labell">图层名称：</label>
+					<input type="text" class="tcmc" />
+				</div>
+				<div class="form-group fr">
+					<button class="btn btn-primary" onclick="importGeojson()">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="export" class="fade">
+		<div class="myform">
+			<div class="form-group">
+				<label class="labell">ID：</label>
+				<input type="text" class="tcmc" />
+			</div>
+			<div class="form-group">
+				<label class="labell">NAME：</label>
+				<input type="text" class="tcmc" />
+			</div>
+			<div class="form-group">
+				<label class="labell">属性：</label>
+				<input type="text" class="tcmc" />
+			</div>
+			<div class="form-group fr">
+				<button class="btn btn-primary" onclick="exportGeojson()">保存</button>
+			</div>
+		</div>
+	</div>
+	<ul class="tabl">
+		<li>我的资源</li>
+	</ul>
+	<div class="tabcontentl">
+		<div id="list1" style="width:300px;">
+			<ul id="list_service">
+
+			</ul>
+		</div>
+	</div>
+
+	<ul class="tabr">
+		<li>我的资源</li>
+	</ul>
+	<div class="tabcontentr">
+		<div id="list2" style="width:300px;">
+			<ul id="list_servicer">
+				
+			</ul>
+		</div>
+	</div>
+
+	<script src="scripts/app.js"></script>
+	<script>
+		$("#cesiumContainer .cesium-viewer-toolbar").prepend(
+			`<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="exports()">
+				<img src="img/i20_05.png" title="导出" />
+			</button>
+			<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="improt(true)">
+				<img src="img/i22_05.png" title="导入" />
+			</button>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(0)">
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i2_05.png" title="测量" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i19_05.png" title="点" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i8_05.png" title="距离" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(2)">
+					<img src="img/i7_05.png" title="面积" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="clearT()">清
+				</button>
+			</span>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(1)">
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i2_05.png" title="绘制" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i19_05.png" title="点" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i8_05.png" title="距离" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(2)">
+					<img src="img/i7_05.png" title="面积" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="clearT()">清
+				</button>
+			</span>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(2)">
+				<button type="button" id="fullScreen" onclick="compareDouble()" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i3_05.png" title="全屏切换" />
+				</button>
+			</span>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(3)">
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i21_05.png" title="视图" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="to2D()">
+					<img src="img/i15_2_05.png" title="2D" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="to3D()">
+					<img src="img/i15_1_05.png" title="3D" />
+				</button>
+			</span>`
+		);
+	</script>
+	<script src="scripts/map2.js"></script>
+	<script>
+		$("#infoboxce .cesium-viewer-toolbar").prepend(
+			`<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+				<img src="img/i20_05.png" title="导出" />
+			</button>
+			<button type="button" class="dr cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="improt(false)">
+				<img src="img/i22_05.png" title="导入" />
+			</button>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(4)">
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i2_05.png" title="测量" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i19_05.png" title="点" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i8_05.png" title="距离" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(2)">
+					<img src="img/i7_05.png" title="面积" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="clearT()">清
+				</button>
+			</span>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(5)">
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i2_05.png" title="绘制" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i19_05.png" title="点" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">
+					<img src="img/i8_05.png" title="距离" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(2)">
+					<img src="img/i7_05.png" title="面积" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="clearT()">清
+				</button>
+			</span>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(6)">
+				<button type="button" id="fullScreen" onclick="compareDouble()" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i3_05.png" title="全屏切换" />
+				</button>
+			</span>
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(7)">
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">
+					<img src="img/i21_05.png" title="视图" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="to2D2()">
+					<img src="img/i15_2_05.png" title="2D" />
+				</button>
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="to3D2()">
+					<img src="img/i15_1_05.png" title="3D" />
+				</button>
+			</span>`
+			);
+	</script>
+	<!-- <script src="scripts/annualslider.js"></script>
+	<script src="scripts/hourlyslider.js"></script>
+	<script src="scripts/button.js"></script>
+	<script src="scripts/subnav.js"></script>
+	<script src="scripts/toggle.js"></script>
+	<script src="scripts/divvyvisuals.js"></script> -->
+	<script src="scripts/view.js"></script>
+	<script>
+		$(window).resize(function(){
+			$("#cesiumContainer").css("width",Rscreenw);
+			$("#infobox").css({"width":Rscreenw,"height":"100%","bottom":"0"});
+		})
+		$("#cesiumContainer").css("width",Rscreenw);
+		$("#infobox").css({"width":Rscreenw,"height":"100%","bottom":"0"});
+	</script>
+</body>
+</html>

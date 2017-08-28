@@ -1,0 +1,686 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>三维系统</title>
+	<meta charset="utf-8">
+	<script src="library/Cesium/Cesium.js"></script>
+	<script src="scripts/util.js"></script>
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/styles.css">
+	<script src="library/knockout-3.1.0.js"></script>
+	<script src="library/chroma.js"></script>
+	<script type="scripts/lodash.min.js"></script>
+	<style>
+		@import url(library/cesium/Widgets/widgets.css);
+		@import url(css/filmstrip.css);
+		@import url(css/info.css);
+		@import url(css/thumbnail.css);
+		#cesiumContainer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			margin: 0;
+			overflow: hidden;
+			padding: 0;
+			font-family: sans-serif;
+		}
+		.cesium-viewer-geocoderContainer{
+			display:none;
+		}
+		#cameraInfo {
+			visibility: hidden;
+			display: block;
+			position: absolute;
+			background: rgba(42, 42, 42, 0.8);
+			top: 50%;
+			left: 0px;
+			height: 100px;
+			width: 650px;
+			font-family: sans-serif;
+			font-size: x-small;
+			color: #eee;
+			padding: 15px;
+		}
+		.cesium-button>img{
+			width:28px;
+			height:28px;
+		}
+		.cwidth{
+			width:38px;
+		}
+		.cesium-show {
+			display:none;
+		}
+		::-webkit-scrollbar {
+			width: 10px;
+			/* for vertical scrollbars */
+			height: 10px;
+			/* for horizontal scrollbars */
+		}
+		::-webkit-scrollbar-track {
+			background: rgba(100, 100, 100, 0.1);
+		}
+		::-webkit-scrollbar-thumb {
+			background: rgba(100, 100, 100, 0.75);
+			border-radius: 10px;
+		}
+		#debugControl {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			padding: .5em;
+			background: rgba(42, 42, 42, 0.7);
+			width: auto;
+			height: auto;
+			white-space: nowrap;
+			-moz-border-radius: 3px;
+			-webkit-border-radius: 3px;
+			border-radius: 3px;
+			color: #fff;
+			font-size: small;
+			font-family: sans-serif;
+			text-decoration: none;
+		}
+		body {
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+		.cesium-widget-credits {
+			padding-right: 0;
+			margin-right: 35px;
+			z-index: 999;
+			pointer-events: none;
+			white-space: nowrap;
+		}
+		.cesium-viewer-fullscreenContainer {
+			top: 5px;
+			right: 9px;
+			height: 32px;
+			width: 32px;
+		}
+		/*
+		.cesium-viewer-toolbar {
+			display: block;
+			position: absolute;
+			top: 3px !important;
+			right: 44px !important;
+		}
+		*/
+		.cesium-button.cesium-fullscreenButton {
+			border-radius: 14%;
+		}
+		#noselectzone {
+			bottom: 0px;
+			position: absolute;
+			height: 175px;
+			background-color: #000;
+			opacity: 0;
+			width: 100%;
+		}
+		#infobox {
+			width: 400px;
+			height: 400px;
+			display: block;
+			position: absolute;
+			bottom: 198px;
+			right: 0;
+			max-width: 450px;
+			background: rgba(38, 38, 38, 0.95);
+			color: #edffff;
+			border: 1px solid #444;
+			border-right: none;
+			border-top-left-radius: 7px;
+			border-bottom-left-radius: 7px;
+			box-shadow: 0 0 10px 1px #000;
+			-webkit-transform: translate(0px,0px);
+			-webkit-transform-origin: 0 0;
+			-webkit-transition-property: -webkit-transform;
+			-webkit-transition-duration: 0.5s;
+			-moz-transform: translate(0px,0px);
+			-moz-transform-origin: 0 0;
+			-moz-transition-property: -moz-transform;
+			-moz-transition-duration: 0.5s;
+			transform: translate(0px,0px);
+			transform-origin: 0 0;
+			transition-property: transform;
+			transition-duration: 0.5s;
+		}
+		#infobox.unmoves{
+			-webkit-transform: translate(410px,0px);
+			-moz-transform: translate(410px,0px);
+			transform: translate(410px,0px);
+		}
+		.tabcontent{
+			position:absolute;
+			top:80px!important;
+			left:23px!important;
+		}
+		.tabcontent>div{
+			display: none;
+			width:0;
+			height:497px;
+			overflow: hidden;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			background: rgba(38, 38, 38, 0.95);
+			color: #edffff;
+			border: 1px solid #444;
+			border-right: none;
+			border-top-left-radius: 7px;
+			border-bottom-left-radius: 7px;
+			box-shadow: 0 0 10px 1px #000;
+			-webkit-transform: translate(100%, 0);
+			-moz-transform: translate(100%, 0);
+			transform: translate(100%, 0);
+			visibility: visible;
+			-webkit-transition: visibility 0s 0.2s, opacity 0.2s ease-in, -webkit-transform 0.2s ease-in;
+			-moz-transition: visibility 0s 0.2s, opacity 0.2s ease-in, -moz-transform 0.2s ease-in;
+			transition: visibility 0s 0.2s, opacity 0.2s ease-in, transform 0.2s ease-in;
+			transform: translate(0, 0);
+			opacity: 0.75;
+			-webkit-transition: opacity 0.2s ease-out, -webkit-transform 0.2s ease-out;
+			-moz-transition: opacity 0.2s ease-out, -moz-transform 0.2s ease-out;
+			transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+		}
+		#list::-webkit-scrollbar{
+			display:none;
+		}
+		#list>ul{
+			padding:10px;
+			margin-top:0;
+		}
+		#list>ul>li{
+			list-style: none;
+			line-height:40px;
+			border-bottom: 1px solid #ccc;
+			cursor: pointer;
+		}
+		#list>ul>li:hover{
+			background-color:rgba(204, 204, 204, 0.34);
+		}
+		#list>span{
+			position: absolute;
+			left: 50%;
+			margin-left:-10px;
+			display:none;
+			width:20px;
+			text-align: center;
+			cursor: pointer;
+			background-color:rgba(255, 255, 255, 0.16);
+		}
+		.up{
+			top: 10px;
+			-moz-animation: up 0.5s linear infinite alternate; 
+			-webkit-animation: up 0.5s linear infinite alternate;
+			-o-animation: up 0.5s linear infinite alternate;
+			animation: up 0.5s linear infinite alternate;
+		}
+
+		.down{
+			bottom: 10px;
+			-moz-animation: down 0.5s linear infinite alternate; 
+			-webkit-animation: down 0.5s linear infinite alternate;
+			-o-animation: down 0.5s linear infinite alternate;
+			animation: down 0.5s linear infinite alternate;
+		}
+
+		@-moz-keyframes up {
+			0% {top:10px;}
+			100% {top:0;}
+		}
+		@-webkit-keyframes up {
+			0% {top:10px;}
+			100% {top:0;}
+		}
+		@-o-keyframes up {
+			0% {top:10px;}
+			100% {top:0;}
+		}
+		@keyframes up {
+			0% {top:10px;}
+			100% {top:0;}
+		}
+
+
+		@-moz-keyframes down {
+			0% {bottom:10px;}
+			100% {bottom:0;}
+		}
+		@-webkit-keyframes down {
+			0% {bottom:10px;}
+			100% {bottom:0;}
+		}
+		@-o-keyframes down {
+			0% {bottom:10px;}
+			100% {bottom:0;}
+		}
+		@keyframes down {
+			0% {bottom:10px;}
+			100% {bottom:0;}
+		}
+
+		#HelpContainerBG {
+			width: 100%;
+			height: 100%;
+			z-index: 10000000;
+			background: rgba(0, 0, 0, 0.75);
+			background-image: url(img/pattern_horizontal.png);
+			background-repeat: repeat;
+			position: absolute;
+		}
+		#HelpContainer {
+			zoom: 0.9;
+			-moz-transform: scale(0.9);
+			-moz-transform-origin: 0 0;
+			width: 930px;
+			height: 505px;
+			display: block;
+			position: absolute;
+			top: 100px;
+			left: 50%;
+			margin-left:-465px;
+			z-index: 100000000000;
+			background: rgba(38, 38, 38, 0.95);
+			color: #edffff;
+			border: 1px solid #444;
+			border-right: none;
+			border-top-left-radius: 7px;
+			border-bottom-left-radius: 7px;
+			border-top-right-radius: 7px;
+			border-bottom-right-radius: 7px;
+			box-shadow: 0 0 10px 1px #000;
+			-webkit-transform: translate(100%, 0);
+			-moz-transform: translate(100%, 0);
+			transform: translate(100%, 0);
+			visibility: visible;
+			-webkit-transition: visibility 0s 0.2s, opacity 0.2s ease-in, -webkit-transform 0.2s ease-in;
+			-moz-transition: visibility 0s 0.2s, opacity 0.2s ease-in, -moz-transform 0.2s ease-in;
+			transition: visibility 0s 0.2s, opacity 0.2s ease-in, transform 0.2s ease-in;
+			transform: translate(0, 0);
+			opacity: 0.75;
+			-webkit-transition: opacity 0.2s ease-out, -webkit-transform 0.2s ease-out;
+			-moz-transition: opacity 0.2s ease-out, -moz-transform 0.2s ease-out;
+			transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+		}
+		#helpcontent {
+			text-align: center;
+			font-size: 15px;
+			font-family: 'divvyfont';
+			opacity: 1;
+			margin-left: 30px;
+			margin-right: 30px;
+		}
+		#listContainer{
+			zoom: 0.9;
+			-moz-transform: scale(0.9);
+			-moz-transform-origin: 0 0;
+			width: 930px;
+			height: 505px;
+			position: absolute;
+			top: 100px;
+			left: 50%;
+			margin-left:-465px;
+			z-index: 100000000000;
+			background: rgba(38, 38, 38, 0.95);
+			color: #edffff;
+			border: 1px solid #444;
+			border-right: none;
+			border-radius: 7px;
+			box-shadow: 0 0 10px 1px #000;
+		}
+		a {
+			color: #ffffff;
+		}
+		.cesium-navigation-help {
+			display: none;
+		}
+		#listContainer.fade{
+			transform: translate(200%, 0);
+			visibility: visible;
+			-webkit-transition: visibility 0s 0.5s, opacity 0.5s ease-in, -webkit-transform 0.5s ease-in;
+			-moz-transition: visibility 0s 0.5s, opacity 0.5s ease-in, -moz-transform 0.5s ease-in;
+			transition: visibility 0s 0.5s, opacity 0.5s ease-in, transform 0.5s ease-in;
+		}
+		#listContainer.fade.in{
+			transform: translate(0, 0);
+			opacity: 0.75;
+			-webkit-transition: opacity 0.5s ease-out, -webkit-transform 0.5s ease-out;
+			-moz-transition: opacity 0.5s ease-out, -moz-transform 0.5s ease-out;
+			transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+		}
+		.tab{
+			position:absolute;
+			top:100px;
+			left:0;
+			z-index:2;
+			display:inline-block;
+			margin: 0;
+			padding:0;
+		}
+		.tab>li{
+			list-style: none;
+			width:23px;
+			border-top-right-radius: 8px;
+			border-bottom-right-radius: 8px;
+			text-align: center;
+			background-color:rgba(38, 38, 38, 0.75);
+			color:#fff;
+			cursor: pointer;
+			word-wrap: break-word;
+			font-size:14px;
+			padding:20px 0;
+		}
+		.tab>li:hover,.e{
+			background-color:rgba(255, 255, 255, 0.75)!important;
+		}
+	</style>
+</head>
+<body>
+	<style>
+		A.applink:hover {border: 2px dotted #DCE6F4;padding:2px;background-color:#ffff00;color:green;text-decoration:none}
+		A.applink       {border: 2px dotted #DCE6F4;padding:2px;color:#2F5BFF;background:transparent;text-decoration:none}
+		A.info          {color:#2F5BFF;background:transparent;text-decoration:none}
+		A.info:hover    {color:green;background:transparent;text-decoration:underline}
+	</style>
+	<object type="image/svg+xml" style="opacity: 0.8;margin-left: 78px;margin-top: 13px;width:100px;height:50px;position:absolute;z-index:1000000000000;" data="img/divvyIcon.svg">
+	</object>
+	<object type="image/svg+xml" style="opacity: 0.8;margin-left: -9px;margin-top: 13px;width:100px;height:50px;position:absolute;z-index:1000000000000;" data="img/chicagoIcon.svg">
+	</object>
+	<div id="cesiumContainer"></div>
+	<div id="header"></div>
+	<div id="HelpContainerBG" style=""></div>
+	<div id="HelpContainer" style="">
+		<div id="helpcontent">
+			<p class="helpc" style="font-size:24px;">欢迎来到三维展示平台</p>
+			<p class="helpc">三维展示倾斜射影模型、数字高程、数字正射影像。可添加geojson、topjson、json(js)等数据 平台是由XXXX 2017年X月X日建立
+				<br> 如有问题可以联系 
+				<a class="helpc" target="_blank" href="https://www.east-dawn.com"> eastdawn</a>. 
+			</p>
+			<p class="helpc">点击网页任意位置将进入三维界面(信息框除外). 在线地址为 
+				<a class="helpc" target="_blank" href="https://github.com">数据演示</a> 以下是截图信息:
+			</p>
+			<table style="width:100%">
+				<tr>
+					<td>
+						<img src="img/1info.png" style="border-top-left-radius: 7px;border-bottom-left-radius: 7px;border-top-right-radius: 7px;border-bottom-right-radius: 7px;width:260px;height:200px">
+					</td>
+					<td>
+						<img src="img/2info.png" style="border-top-left-radius: 7px;border-bottom-left-radius: 7px;border-top-right-radius: 7px;border-bottom-right-radius: 7px;width:260px;height:200px">
+					</td>
+					<td>
+						<img src="img/3info.png" style="border-top-left-radius: 7px;border-bottom-left-radius: 7px;border-top-right-radius: 7px;border-bottom-right-radius: 7px;width:260px;height:200px">
+					</td>
+				</tr>
+				<tr>
+					<td style="width:33%;padding-left: 12px;padding-right: 12px;font-size:12px">时间轴展示动态数据样例图</td>
+					<td style="width:33%;padding-left: 12px;padding-right: 12px;font-size:12px">数据统计样例图</td>
+					<td style="width:33%;padding-left: 12px;padding-right: 12px;font-size:12px">切片数据单体管理样例图</td>
+				</tr>
+			</table>
+			<p class="helpc">正将此虚拟三维展示放入online中</p>
+			<p class="helpc">如需API等信息请进入
+				<a class="helpc" target="_blank" href="https://github.com">开放平台</a>
+			</p>
+		</div>
+	</div>
+	<div id="listContainer" class="fade"></div>
+	<div id="infobox" onmouseout="selectzone()" onmouseover="noselectzone()"></div>
+	<ul class="tab">
+		<li>导入数据</li>
+		<li>已定制服务</li>
+	</ul>
+	<div class="tabcontent">
+		<div id="list">
+			<ul id="list_ul">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+				<li>6</li>
+				<li>7</li>
+				<li>8</li>
+				<li>9</li>
+				<li>10</li>
+				<li>11</li>
+				<li>12</li>
+				<li>13</li>
+				<li>14</li>
+			</ul>
+			<span class="up">∧</span>
+			<span class="down">∨</span>
+		</div>
+		<div id="list2">
+			<span>2</span>
+		</div>
+	</div>
+
+	<div id="slider" style="z-index:1000000;width:100%;" onmouseout="selectzone()" onmouseover="noselectzone()"></div>
+	<div id="noselectzone" onmouseout="selectzone()" onmouseover="noselectzone()"></div>
+	<div id="cameraInfo">
+		<p>
+			<strong>CameraInfo:</strong>
+		</p>
+		<pre data-bind="text: cameraInfo"></pre>
+	</div>
+	<div id="filmstrip" class="uncollapsed" onmouseout="selectzone()" onmouseover="noselectzone()">
+		<div id="filmstripheader" style="opacity:0.7;font-family:'divvyfont';float:right;right: 70px;position:absolute;margin-top: -20px;">SAVED VIEWS
+		</div>
+		<div id="thumbnails" data-bind="foreach: pointsOfInterest">
+			<div class="tip2 thumbnail" data-bind="click: $parent.changePointOfInterest, style: { backgroundImage: 'url(\'' + $data.thumbnail + '\')' }">
+				<span data-bind="text: name"></span>
+			</div>
+		</div>
+		<div id="collapse" class="uncollapsed" onclick="onCollapse()"></div>
+		<div id="hrslider" style="z-index:1000000;width:100%;" onmouseout="selectzone()" onmouseover="noselectzone()"></div>
+	</div>
+	<div id="info" class="collapsed"><p data-bind="html: info" onclick="onClickInfo()"></p></div>
+	<script src="scripts/app.js"></script>
+	<script src="scripts/annualslider.js"></script>
+	<script src="scripts/hourlyslider.js"></script>
+	<script src="scripts/button.js"></script>
+	<script src="scripts/subnav.js"></script>
+	<script src="scripts/toggle.js"></script>
+	<script src="scripts/divvyvisuals.js"></script>
+	<script src="scripts/map.js"></script>
+	<script> 
+		$(document).ready(function(){
+			
+		});
+		
+		
+		$(".cesium-viewer-toolbar").prepend('<div class="cesium-viewer-geocoderContainer" style="display:inline-block;"><form data-bind="submit: search"><input type="search" class="cesium-geocoder-input" placeholder="Enter an address or landmark..." data-bind="textInput: searchText,disable: isSearchInProgress,event: { keyup: handleKeyUp, keydown: handleKeyDown, mouseover: deselectSuggestion },css: { &quot;cesium-geocoder-input-wide&quot; : keepExpanded || searchText.length > 0 },hasFocus: _focusTextbox"><span class="cesium-geocoder-searchButton" data-bind="click: search,cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, width: 32, height: 32 }"><img src="img/search.svg" style="width:28px;height:28px;" /></span></form><div class="search-results" data-bind="visible: _suggestionsVisible" style="display: none; max-height: 669px;"><ul data-bind="foreach: _suggestions"></ul></div></div><span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(0)"><button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button"><img src="img/home.svg" title="测量" /></button><button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button">距</button><button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button">面</button></span><span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(1)"><button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button"><img src="img/home.svg" title="比较" /></button><button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button">三</button><button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button">二</button></span><span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(2)"><button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button"><img src="img/search.svg" title="视图" /><button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button">2D</button><button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button">3D</button></span>');
+
+		function iconshow(e){
+			$(".cwidth").eq(e).children(".cesium-show").toggle()
+		}
+
+		var $tabli = $(".tab li");
+		var $tabC = $(".tabcontent div");
+		$tabli.click(function(event){
+			var index = $(this).index();
+			
+			if(event.target.className == 'e'){
+				$(this).removeClass('e');
+				$tabC.eq(index).animate({width: '0'},800).hide();
+			}else{
+				$(this).addClass('e').siblings().removeClass('e');
+				$tabC.eq(index).show().animate({width: '300px'},800).siblings().animate({width: '0'},800);
+			}
+
+		})
+
+		var $list = $("#list>ul>li");
+		$list.click(function(){
+			var index = $(this).index();
+			$("#HelpContainerBG").show();
+			showdetial(index);
+		})
+
+		function showdetial(index){
+			$("#listContainer").addClass('in')
+		}
+
+		$(document).click(function(e){
+			if(e.target.id == "HelpContainerBG"){
+				$("#HelpContainerBG").hide();
+				$("#listContainer").removeClass('in');
+			}
+			// if(e.target.id == ""){
+			// 	$(".tabcontent>div").animate({width: '0'},800);
+			// }
+		})
+
+
+		// function CeiumHide(){
+		// 	alert($(".caf-toggle-state").text());
+		// 	if($(".caf-toggle-state").text() == "on"){
+		// 		$("#infobox").removeClass("collapsed").addClass('unmoves')
+		// 	}else if($(".caf-toggle-state").text() == "off"){
+		// 		$("#infobox").removeClass("unmoves").addClass('collapsed')
+		// 	}
+		// }
+
+
+
+		if($list.length>10){
+			$("#list>span.down").show();
+		}else{
+			$("#list>span.down").hide();
+		}
+
+
+
+		//滚轮事件 
+		window.onload = function(){ 
+			//使div可以跟随鼠标滚轮滚动来改变高度 
+			//滚轮向下滚，div变高 滚轮向上滚 div变短 
+			//获取box1 
+			var box1 = document.getElementById("list_ul"); 
+			var list = document.getElementById("list"); 
+			/* 
+			 * onmousewheel 
+			 * - 鼠标滚轮滚动的事件，但是该事件火狐浏览器并不支持 
+			 * - 在火狐中需要使用DOMMouseScroll，这个事件只能通过addEventListener()来绑定 
+			 */ 
+			//为box1绑定一个鼠标滚轮滚动的事件 
+			box1.onmousewheel = function(event){ 
+				event = event || window.event; 
+			
+		  	//判断滚轮滚动的方向 
+			/* 
+			 * wheelDelta 
+			 * - 事件对象中的属性，可以用来判断鼠标滚轮滚动的方向 
+			 * - 向下滚 -120 向上滚 +120 
+			 * - 该属性的值并不重要，重要的是值的符号，需要通过符号来判断滚动的方向 
+			 * - 但是该属性火狐浏览器并不支持 
+			 */ 
+		  	//alert(event.wheelDelta); 
+
+			/* 
+			 * 火狐中通过detail来判断方向 
+			 * - 向上滚 -3  向下滚 +3 
+			 */ 
+			//alert(event.detail); 
+			var box1h = box1.offsetHeight;
+			var listh = list.offsetHeight;
+			var n = box1h-listh;
+			var absbox1 = Math.abs(box1.offsetTop);
+
+			if(event.wheelDelta < 0 || event.detail > 0){ 
+				//向下滚 
+				//减少box1.offsetTop
+				if(absbox1 <= n){
+					box1.style.marginTop = box1.offsetTop - 20 + "px"; 
+					$("#list>span.down").hide();
+					$("#list>span.up").show();
+				}
+			}else{ 
+				//向上滚 
+				//增加box1.offsetTop 
+				if(box1.offsetTop < 0){
+					box1.style.marginTop = box1.offsetTop + 20 + "px"; 
+				}else{
+					$("#list>span.up").hide();
+					$("#list>span.down").show();
+				}
+			} 
+			
+			/* 
+			 * 使用addEventListener()绑定的事件，不能通过return false来取消默认行为 
+			 * 需要调用事件对象 preventDefault()方法来取消默认行为 
+			 * 但是在IE8中没有该方法 
+			 */ 
+			event.preventDefault &&　event.preventDefault(); 
+
+			//当页面中有滚动条时，由于滚轮滚动的默认行为会导致页面整体下移 
+			//取消默认行为 
+			return false; 
+		}; 
+
+		bind(box1 , "DOMMouseScroll" , box1.onmousewheel); 
+
+		//点击事件
+		$(".down").click(function(){
+			var box1h = box1.offsetHeight;
+			var listh = list.offsetHeight;
+			var n = box1h-listh;
+			var absbox1 = Math.abs(box1.offsetTop);
+			if(absbox1 < n){
+				box1.style.marginTop = box1.offsetTop - 20 + "px"; 
+			}else if(absbox1-3 == n){
+				$("#list>span.down").hide();
+				$("#list>span.up").show();
+			}
+		})
+
+		$(".up").click(function(){
+			if(box1.offsetTop < 0){
+				box1.style.marginTop = box1.offsetTop + 20 + "px"; 
+			}else{
+				$("#list>span.up").hide();
+				$("#list>span.down").show();
+			}
+		})
+	}; 
+
+	function bind(obj , eventStr , callback){ 
+		if(obj.addEventListener){ 
+		  //如果是正常浏览器 
+		  obj.addEventListener(eventStr , callback , false); 
+		}else{ 
+		  //IE8 
+		  obj.attachEvent("on"+eventStr , function(){ 
+		  	callback.call(obj); 
+		  }); 
+		} 
+	} 
+
+	
+	
+	function Person(name)  
+	{  
+	   this.name=name;  
+	   this.showMe=function()  
+			{  
+			   alert(this.name);  
+			}  
+	};  
+	Person.prototype.from=function()  
+	{  
+	  alert('I come from prototype.');  
+	}  
+	debugger;
+	var one=new Person('js');  
+	one.from();
+	alert(one.prototype)//undefined  
+	alert(typeof Person.prototype);//object  
+	alert(Person.prototype.constructor);//function Person(name) {...};  
+</script>
+</body>
+</html>

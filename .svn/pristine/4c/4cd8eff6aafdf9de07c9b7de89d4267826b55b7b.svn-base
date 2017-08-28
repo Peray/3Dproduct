@@ -1,0 +1,16 @@
+'use strict';
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-21 16:40:47
+ * @version $Id$
+ */
+
+
+var $list_item_li  = $(".list-item li");
+
+$list_item_li.click(function() {
+	
+	$(this).addClass('active').siblings("li").removeClass('active');
+
+});

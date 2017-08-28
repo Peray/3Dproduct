@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>增加页面</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+
+
+	<div class="admin-content-body">
+		<div class="am-cf am-margin">
+			<div class="am-g">
+				<div class="am-u-sm-12">
+					<form class="am-form am-form-horizontal">
+						<fieldset>
+							<legend>新增服务</legend>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-num-1">服务编号</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-ipt-num-1" placeholder="请输入服务编号" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">服务名称</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-ipt-name-1" placeholder="请输入服务名称" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-adr-1">服务地址</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-ipt-adr-1" placeholder="请输入服务地址" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ta-1">描述</label>
+								<div class="am-u-sm-8">
+									<textarea rows="5" id="doc-ta-1" required></textarea>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-time-1">服务发布时间</label>
+								<div class="am-u-sm-8">
+									<input type="date" id="doc-ipt-time-1" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group am-form-file">
+								<label class="am-u-sm-3 am-form-label">文件上传</label>
+								<div class="am-u-sm-8">
+									<button type="button" class="am-btn am-btn-success am-btn-sm">
+										<i class="am-icon-cloud-upload"></i> 选择要上传的文件
+									</button>
+									<input id="doc-form-file" type="file"  required/>
+									<span id="file-list"></span>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<legend>元数据信息</legend>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-name-1">数据名称</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-name-1" placeholder="请输入数据名称">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-dir-1">方位描述</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-dir-1" placeholder="请输入方位描述">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-x-1">地理信息坐标</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-x-1" placeholder="地理信息坐标">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-name-2">影像名称</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-name-2" placeholder="请输入影像名称" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-fbl-1">影像分辨率</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-fbl-1" placeholder="请输入影像分辨率" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-fw-1">影像范围</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-fw-1" placeholder="请输入影像范围">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-sjl-1">影像数据量</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-sjl-1" placeholder="请输入影像数据量">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-type-1">影像类型</label>
+								<div class="am-u-sm-8">
+									<select id="doc-data-type-1">
+										<option value="option1">选项一...</option>
+										<option value="option2">选项二.....</option>
+										<option value="option3">选项三........</option>
+									</select>
+									<span class="am-form-caret"></span>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-date-1">影像生成时间</label>
+								<div class="am-u-sm-8">
+									<input type="date" id="doc-data-date-1" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-ly-1">影像来源</label>
+								<div class="am-u-sm-8">
+									<select id="doc-data-ly-1">
+										<option value="option1">选项一...</option>
+										<option value="option2">选项二.....</option>
+										<option value="option3">选项三........</option>
+									</select>
+									<span class="am-form-caret"></span>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-cjdw-1">原始影像采集单位</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-cjdw-1" placeholder="请输入原始影像采集单位">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+			
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-cldw-1">影像处理单位</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-cldw-1" placeholder="请输入影像处理单位">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-ld-1">影像范围两点</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-ld-1" placeholder="请输入影像范围两点">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-sd-1">影像审定者</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-sd-1" placeholder="请输入影像审定者">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-sd-2">影像审定单位</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-sd-2" placeholder="请输入影像审定单位">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-sd-3">影像审定时间</label>
+								<div class="am-u-sm-8">
+									<input type="date" id="doc-data-sd-3">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-sjmj-2">数据密集</label>
+								<div class="am-u-sm-8">
+									<select id="doc-data-sjmj-2">
+										<option value="option1">公开</option>
+										<option value="option2">不公开</option>
+									</select>
+									<span class="am-form-caret"></span>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-cqgs-2">知识产权归属</label>
+								<div class="am-u-sm-8">
+									<select id="doc-data-cqgs-2">
+										<option value="option1">1</option>
+										<option value="option2">2</option>
+									</select>
+									<span class="am-form-caret"></span>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-qt-1">其他1</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-qt-1" placeholder="">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-qt-2">其他2</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-qt-2" placeholder="">
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-txr-1">填写人</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-txr-1" placeholder="请输入填写人" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-txsj-1">填写时间</label>
+								<div class="am-u-sm-8">
+									<input type="date" id="doc-data-txsj-1" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-shr-1">审核人</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="doc-data-shr-1" placeholder="请输入审核人" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-shsj-1">审核时间</label>
+								<div class="am-u-sm-8">
+									<input type="date" id="doc-data-shsj-1" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+							<br>
+							<p class="am-text-center"><button type="submit" class="am-btn am-btn-primary">保存修改</button></p>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	<!--[if (gte IE 9)|!(IE)]><!-->
+		<script src="js/jquery-1.8.1.min.js"></script>
+	<!--<![endif]-->
+	<script src="js/amazeui.min.js"></script>
+	<script>
+		$(function() {
+			$('#doc-form-file').on('change', function() {
+				var fileNames = '';
+				$.each(this.files, function() {
+					fileNames += '<span class="am-badge">' + this.name + '</span> ';
+				});
+				$('#file-list').html(fileNames);
+			});
+		});
+	</script>
+</body>
+</html>

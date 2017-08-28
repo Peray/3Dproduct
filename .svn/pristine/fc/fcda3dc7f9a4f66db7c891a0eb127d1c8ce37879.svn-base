@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>登录/注册</title>
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/frame.css">
+	<link rel="stylesheet" href="css/login.css">
+</head>
+<body onload="getUser();">
+	<header>
+		<img class="logo" src="" alt="">
+	</header>
+	<section>
+		<form class="login" id="login">
+			<p><input type="text" name="logName" placeholder="用户名" required></p>
+			<p><input type="password" name="logPwd" placeholder="密码" required></p>
+			<p class="ve-code">
+				<input type="text" name="logYzm" placeholder="验证码" required>
+				<img onclick="getImageCode()" src="" />
+			</p>
+			<input type="submit" value="登录" />
+			<p class="turn-right">
+				<a href="javascript:void(0);">没有账号？立即注册</a>
+			</p>
+		</form>
+		<form class="register none" id="register">
+			<p><input type="text" name="logName" placeholder="用户名" required></p>
+			<p><input type="password" name="logPwd" id="logPwd" placeholder="请输入密码" required></p>
+			<p><input type="password" name="checkpwd" placeholder="请再次输入密码" required></p>
+			<p><input type="text" name="logDep" placeholder="部门名称" required></p>
+			<p><input type="text" name="email" placeholder="E-MAIL" required></p>
+			<input type="submit" value="注册" />
+			<p class="turn-right">
+				<a href="javascript:void(0);">已有账号？立即登录</a>
+			</p>
+		</form>
+	</section>
+	<footer>
+		<div class="footer">
+			<p class="fp">
+				<a href="javascript:void(0);">联系我们</a>
+				<span>|</span>
+				<a href="javascript:void(0);">服务说明</a>
+				<span>|</span>
+				<a href="javascript:void(0);">意见反馈</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">国家测绘地理信息局&nbsp;&nbsp;监制</a>
+				<a href="javascript:void(0);">国家基础地理信息中心&nbsp;&nbsp;版权所有</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">甲测资字1100222</a>
+				<a href="javascript:void(0);">京ICP备1200922号-2</a>
+				<a href="javascript:void(0);">京公安网备1101080201222</a>
+			</p>
+		</div>
+	</footer>
+
+
+	<script src="js/jquery-1.8.1.min.js"></script>
+	<script src="js/validate/jquery.validate.min.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/login.js"></script>
+	<script>
+		
+	</script>
+</body>
+</html>

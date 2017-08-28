@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>三维系统</title>
+	<meta charset="utf-8">
+	<script src="library/Cesium/Cesium.js"></script>
+	<script src="scripts/util.js"></script>
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="library/Cesium/Widgets/widgets.css">
+	<link rel="stylesheet" href="css/filmstrip.css">
+	<link rel="stylesheet" href="css/info.css">
+	<link rel="stylesheet" href="css/thumbnail.css">
+	<link rel="stylesheet" href="css/view.css">
+	<script src="library/knockout-3.1.0.js"></script>
+	<script src="library/chroma.js"></script>
+	<script type="scripts/lodash.min.js"></script>
+</head>
+<body>
+	<style>
+		#infobox .btn-top{
+			top:0px;
+		}
+	</style>
+	<div class="logo">
+		<img src="img/logo_12.png" alt="">
+	</div>
+	<div id="cesiumContainer"></div>
+	<div id="header"></div>
+	<div id="HelpContainerBG" style=""></div>
+	<div id="HelpContainer" style="">
+		<div id="helpcontent">
+			<p class="helpc title">欢迎来到三维展示平台</p>
+			<p class="helpc">三维展示倾斜射影模型、数字高程、数字正射影像。可添加geojson、topjson、json(js)等数据 平台是由XXXX 2017年X月X日建立
+				<br> 如有问题可以联系 
+				<a class="helpc" target="_blank" href="https://www.east-dawn.com"> eastdawn</a>. 
+			</p>
+			<p class="helpc">点击网页任意位置将进入三维界面(信息框除外). 在线地址为 
+				<a class="helpc" target="_blank" href="https://github.com">数据演示</a> 以下是截图信息:
+			</p>
+			<table>
+				<tr>
+					<td><img class="imgtd" src="img/1info.png" /></td>
+					<td><img class="imgtd" src="img/2info.png" /></td>
+					<td><img class="imgtd" src="img/3info.png" /></td>
+				</tr>
+				<tr>
+					<td class="tde">时间轴展示动态数据样例图</td>
+					<td class="tde">数据统计样例图</td>
+					<td class="tde">切片数据单体管理样例图</td>
+				</tr>
+			</table>
+			<p class="helpc">正将此虚拟三维展示放入online中</p>
+			<p class="helpc">如需API等信息请进入
+				<a class="helpc" target="_blank" href="https://github.com">开放平台</a>
+			</p>
+		</div>
+	</div>
+	<div id="listContainer" class="fade"></div>
+	<div id="Import" class="fade">
+		<div class="myform">
+			<div class="form-group">
+				<label class="labell">导入文件：</label>
+				<input id='sjshow' class="wenjian" type="text" readonly>
+					<a href="javascript:;" class="file">加载
+						<input type="file" accept=".json" name="" id="inputFile">
+					</a>
+			</div>
+			<!-- <div class="form-group">
+				<label class="labell">样式设置：</label>
+				<input type="color" class="stydr" />
+				<input type="text" class="stydr" />
+				<input type="text" class="stydr" />
+			</div>
+			<div class="form-group">
+				<label class="labell">图层名称：</label>
+				<input type="text" class="tcmc" />
+			</div> -->
+			<div class="form-group fr">
+				<button class="btn btn-primary" onclick="importGeojson()">关闭</button>
+			</div>
+		</div>
+	</div>
+	<div id="infobox" onmouseout="selectzone()" onmouseover="noselectzone()">
+	<div id='infoboxce'></div>
+	<div id='infoboxinfo'>
+		<table class="myTable">
+			<thead>
+				<tr>
+					<th>属性</th>
+					<th>属性值</th>
+				</tr>
+			</thead>
+			<tbody id="tbr"></tbody>
+		</table>
+	</div>
+	</div>
+	<ul class="tab">
+		<li>导入数据</li>
+		<li>我的资源</li>
+	</ul>
+	<div class="tabcontent">
+		<div id="list">
+			<ul id="list_ul">暂无数据！</ul>
+			<span class="up">∧</span>
+			<span class="down">∨</span>
+		</div>
+		<div id="list1">
+			<ul id="list_service"></ul>
+		</div>
+	</div>
+
+	<div id="slider" onmouseout="selectzone()" onmouseover="noselectzone()"></div>
+	
+	<div id="cameraInfo">
+		<p>
+			<strong>CameraInfo:</strong>
+		</p>
+		<pre data-bind="text: cameraInfo"></pre>
+	</div>
+	<div id="filmstrip" class="uncollapsed" onmouseout="selectzone()" onmouseover="noselectzone()">
+		<div id="filmstripheader">属性列表</div>
+		<div id="thumbnails" data-bind="foreach: pointsOfInterest">
+			<div class="tip2 thumbnail" data-bind="click: $parent.changePointOfInterest, style: { backgroundImage: 'url(\'' + $data.thumbnail + '\')' }">
+				<span data-bind="text: name"></span>
+			</div>
+		</div>
+		<div id="tablepre">
+			<div id="dateTable">
+				暂无数据！
+			</div>
+			<div  id='page_info'>
+				<a href='#' onclick='searchPrepage()'>上一页</a>&nbsp&nbsp&nbsp&nbsp
+				<a href='#' id='curpage'>当前第1页</a>&nbsp&nbsp&nbsp&nbsp
+				<a href='#' onclick='searchNextpage()'>下一页</a>&nbsp&nbsp&nbsp&nbsp
+				<a href='#' id='totalpage'>共1页</a>&nbsp&nbsp&nbsp&nbsp
+				<a href='#' id='totalrecoder'>共0条记录 </a>     
+			</div>
+		</div>
+		<div id="collapse" class="uncollapsed" onclick="onCollapse()"></div>
+		<!-- <div id="hrslider" style="width:100%;" onmouseout="selectzone()" onmouseover="noselectzone()"></div> -->
+	</div>
+	<div id="info" class="collapsed">
+		<p data-bind="html: info" onclick="onClickInfo()"></p>
+	</div>
+	<script src="scripts/app.js"></script>
+	<script>
+		$(".cesium-viewer-toolbar").prepend(
+			'<button type="button" class="dr cesium-button cesium-toolbar-button cesium-navigation-help-button"onclick="improt()">\
+				<img src="img/i22_05.png" title="导入" /></button>\
+			</button>\
+			<div class="cesium-viewer-geocoderContainer" style="display:inline-block;">\
+				<form data-bind="submit: search">\
+					<input id="searchkey" type="search" class="cesium-geocoder-input" placeholder="输入查询关键字" data-bind="textInput: searchText,disable: isSearchInProgress,event: { keyup: handleKeyUp, keydown: handleKeyDown, mouseover: deselectSuggestion },css: { &quot;cesium-geocoder-input-wide&quot; : keepExpanded || searchText.length > 0 },hasFocus: _focusTextbox">\
+					<span class="cesium-geocoder-searchButton" ">\
+						<img src="img/i1_05.png" onclick="testApps()"/>\
+					</span>\
+				</form>\
+				<div class="search-results" data-bind="visible: _suggestionsVisible" style="display: none; max-height: 669px;">\
+					<ul data-bind="foreach: _suggestions"></ul>\
+				</div>\
+			</div>\
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(0)">\
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">\
+					<img src="img/i2_05.png" title="测量" />\
+				</button>\
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(1)">\
+					<img src="img/i8_05.png" title="距离" />\
+				</button>\
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="getPosition(2)">\
+					<img src="img/i7_05.png" title="面积" />\
+				</button>\
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="clearT()">清\
+				</button>\
+			</span>\
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(1)">\
+				<button type="button" id="fullScreen" onclick="compareDouble()" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">\
+					<img src="img/i3_05.png" title="全屏切换" />\
+				</button>\
+			</span>\
+			<span class="cesium-sceneModePicker-wrapper cesium-toolbar-button cwidth" onclick="iconshow(2)">\
+				<button type="button" class="cesium-button cesium-toolbar-button cesium-navigation-help-button">\
+					<img src="img/i21_05.png" title="视图" />\
+				</button>\
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="to2D()">\
+					<img src="img/i15_2_05.png" title="2D" />\
+				</button>\
+				<button type="button" class="cesium-show cesium-button cesium-toolbar-button cesium-navigation-help-button" onclick="to3D()">\
+					<img src="img/i15_1_05.png" title="3D" />\
+				</button>\
+			</span>'
+		);
+	</script>
+	<script src="scripts/map.js"></script>
+	<script src="scripts/annualslider.js"></script>
+	<script src="scripts/hourlyslider.js"></script>
+	<script src="scripts/button.js"></script>
+	<script src="scripts/subnav.js"></script>
+	<script src="scripts/toggle.js"></script>
+	<script src="scripts/divvyvisuals.js"></script>
+	<script src="scripts/view.js"></script>
+</body>
+</html>

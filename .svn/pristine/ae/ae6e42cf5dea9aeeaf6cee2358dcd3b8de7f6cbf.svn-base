@@ -1,0 +1,278 @@
+$(window).load(function() {
+	getdata(1,true);
+	timech();
+});
+var rp = 10;
+//加载管理信息
+function getdata(page,b){
+	$.ajax({
+		type:'post',
+		url: 'userAllAdmin!execute.action',
+		dataType: 'json',
+//		data: { statr: page,rp:rp},
+		success:function(ret){
+			ret = eval(ret);
+			var div = "";
+			totalitems = ret.list.length;
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="5">当前没有在线用户！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i][0].logTime.time);
+						Y = date.getFullYear() + '-';
+						M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+						D = date.getDate() + '　';
+						
+						H = date.getHours() + ':';
+						F = date.getMinutes() + ':';
+						S = date.getSeconds();
+					var star_date =ret.list[i][0].logTime.time;
+					var in_time = new Date();
+					var num=in_time.getTime()-star_date;
+					var leave1=num%(24*3600*1000);    //计算天数后剩余的毫秒数
+					var hours=Math.floor(leave1/(3600*1000));
+					//计算相差分钟数
+					var leave2=leave1%(3600*1000);        //计算小时数后剩余的毫秒数
+					var minutes=Math.floor(leave2/(60*1000));
+					//计算相差秒数
+					var leave3=leave2%(60*1000);      //计算分钟数后剩余的毫秒数
+					var seconds=Math.round(leave3/1000);
+					div += '<tr>'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+ret.list[i][0].logName+'</td>';
+									if(ret.list[i][0].level == "1"){
+										div +='<td>注册用户</td>';
+									}
+									if(ret.list[i][0].level == "2"){
+										div +='<td>已审核用户</td>';
+									}
+								div +='<td>'+Y+M+D+H+F+S+'</td>'+
+								'<td>'+hours+"时："+minutes+"分："+seconds+"秒"+'</td>'+
+								'<td>'+
+									'<button class="am-btn am-btn-success am-radius am-btn-xs" onClick="Offline('+ret.list[i][0].logName+');">强制下线</button>　'+
+								'</td>'+
+							'</tr>'
+				}
+			}
+			$("#userAll").html(div);
+//			$("#myTable3").trigger("update");
+
+			if(b){
+				initPage(totalitems);
+			}
+			
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};
+//
+//分页
+function initPage(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+				if(num!=1){
+					getdata(num,false);
+				}if(num == 1){
+					getdata(1,false);
+				}
+			}
+		});
+	}
+}
+
+function Offline(name){
+	alert(name);
+    $.ajax({
+		type:'post',
+		url: 'userAllAdmin!Offline.action',
+		dataType: 'json',
+		data: { "username": name},
+		success:function(ret){
+			ret = eval(ret);
+			if(ret == 1){
+				alert("对方已被强制下线！");
+			}
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+}
+
+'use strict';
+
+//图表
+var myChart = echarts.init(document.getElementById('main'));
+var	option = {
+		color: ['#5793f3'],
+		tooltip: {
+			trigger: 'none',
+			axisPointer: {
+				type: 'cross'
+			}
+		},
+		legend: {
+			data:[]
+		},
+		grid: {
+			top: 70,
+			bottom: 50
+		},
+		xAxis: [{
+			type: 'category',
+			name: '时间',
+			axisTick: {
+				alignWithLabel: true
+			},
+			axisLine: {
+				onZero: false,
+				lineStyle: {
+					color: ['#000']
+				}
+			},
+			axisPointer: {
+				label: {
+					formatter: function (params) {
+						return '次数  ' + params.value+ (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+					}
+				}
+			},
+			data: []
+		}],
+		yAxis: [{
+			type: 'value',
+			name: '访问次数',
+			axisLine: {
+				onZero: false,
+				lineStyle: {
+					color: ['#000']
+				}
+			}
+		}],
+		series: [{
+			name:'2016 次数',
+			type:'line',
+			smooth: true,
+			data: [],
+			markPoint: {
+                data: [
+                    {type: 'max', name: '最大值'},
+                    {type: 'min', name: '最小值'}
+                ]
+            },
+            markLine:{
+                data:[
+                    {type:'average',name:'平均值',itemStyle:{
+                        normal:{
+                            color:'green'
+                        }
+                    }}
+                ]
+            }
+		}]
+	};
+	
+function timech(){
+	var optionTime = parseFloat($("#selectTime").val());
+	if(optionTime == '6'){
+		$("#timeFind").show();
+	}else{
+		$("#timeFind").hide();
+		$.ajax({
+			type:'post',
+			url: 'userAdmin!searchLogs.action',
+			dataType: 'json',
+			data: { "canshu": optionTime},
+			success:function(ret){
+				ret = eval(ret);
+				$("#main").show();
+				$(".p_data").hide();
+				if(ret.list.length>0){
+					var line = [],count=[];
+					for(var i=0;i<ret.list.length;i++){
+						if(ret.list[i].days.length == 8){
+							var a = ret.list[i].days.substring(0, 4);
+							var b = ret.list[i].days.substring(4, 6);
+							var c = ret.list[i].days.substring(6, 8);
+							line.push(a+'年'+b+'月'+c+'日');
+						}else{
+							line.push(ret.list[i].days+'时');
+						}
+						count.push(ret.list[i].count);
+					}
+					option.xAxis[0].data= line;
+					option.series[0].data= count;
+					myChart.hideLoading();
+					myChart.setOption(option);
+					window.onresize = myChart.resize;
+				}else{
+					myChart.hideLoading();
+					option.xAxis[0].data= "";
+					option.series[0].data= "";
+					myChart.setOption(option);
+					$(".p_data").show();
+					$("#main").hide();
+				}
+			},
+			error: function(ret, ret1, ret2) {
+				debugger;
+			}
+		})
+	}
+}
+
+function zdy(){
+	var startTime= $("#startTime").val();
+	var endTime= $("#endTime").val();
+	$.ajax({
+			type:'post',
+			url: 'userAdmin!searchLogs.action',
+			dataType: 'json',
+			data: { "canshu": 6,'starTime':startTime,'endTime':endTime},
+			success:function(ret){
+				ret = eval(ret);
+				if(ret.list.length>0){
+					$("#main").show();
+					$(".p_data").hide();
+					var line = [],count=[];
+					for(var i=0;i<ret.list.length;i++){
+						if(ret.list[i].days.length == 8){
+							var a = ret.list[i].days.substring(0, 4);
+							var b = ret.list[i].days.substring(4, 6);
+							var c = ret.list[i].days.substring(6, 8);
+							line.push(a+'年'+b+'月'+c+'日');
+						}else{
+							line.push(ret.list[i].days+'时');
+						}
+						count.push(ret.list[i].count);
+					}
+					option.xAxis[0].data= line;
+					option.series[0].data= count;
+					myChart.hideLoading();
+					myChart.setOption(option, true); 
+					window.onresize = myChart.resize;
+				}else{
+					myChart.hideLoading();
+					option.xAxis[0].data= "";
+					option.series[0].data= "";
+					myChart.setOption(option);
+					$(".p_data").show();
+					$("#main").hide();
+				}
+			},
+			error: function(ret, ret1, ret2) {
+				debugger;
+			}
+		})
+}

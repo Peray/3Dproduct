@@ -1,0 +1,317 @@
+'use strict';
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-26 14:43:31
+ * @version $Id$
+ */
+$(window).load(function() {
+	getdata(1,true);
+});
+var rp = 10;
+
+//定制我的资源
+function getdata(page,b){
+	$.ajax({
+		type:'post',
+		url: 'myService!execute.action',
+		dataType: 'json',
+		data: { statr: page,userId:userId},
+		success:function(ret){
+			ret = eval(ret);
+			var totalitems = ret.num;
+			var div = "";
+//			$("#searKey").html("共"+totalitems+"条记录");
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i].time.time);
+							var Y = date.getFullYear() + '-';
+							var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							var D = date.getDate();
+					
+						div += '<tr>'+
+							'<td>'+(i+1)+'</td>'+
+							'<td>'+ret.list[i].serviceName+'</td>'+
+							'<td>'+Y+M+D+'</td>'+
+							'<td>'+
+								'<button class="btn btn-primary btn-xs" onclick="detail('+ret.list[i].parentId+')">查看</button>'+
+								'<button class="btn btn-danger btn-xs" onclick="cancle('+ret.list[i].serviceId+')">取消订阅</button>'+
+							'</td>'+
+						'</tr>';
+				}
+			}
+			$("#tbody").html(div);
+			$("#myTable").trigger("update");
+
+			if(b){
+				initPage(totalitems);
+			}
+			
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};
+
+//分页
+function initPage(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+			getdata(num,false);
+			}
+		});
+	}
+}
+
+
+
+
+//查看
+function detail(id){
+	$.ajax({
+	        type: "post",
+	        url: "gl!detail.action",
+	        data: {"glId":id},
+	        dataType: "json",
+	        success: function (ret) {
+	 			ret = eval(ret);
+				var div = "";
+
+				var date = new Date(ret.list[0].fbTime.time);
+				var Y = date.getFullYear() + '-';
+				var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+				var D = (date.getDate() < 10 ? '0'+( date.getDate()) :  date.getDate());
+
+				div+=	'<p class="list">'+
+							'<span style="vertical-align:top;">服务展示</span>'+
+							'<span style="width:380px;height:300px;" id="dituContent"></span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务编号</span>'+
+							'<span>'+ret.list[0].glNumber+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务名称</span>'+
+							'<span>'+ret.list[0].glName+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务发布时间</span>'+
+							'<span>'+Y+M+D+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>描述</span>'+
+							'<span>'+ret.list[0].content+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务名称</span>'+
+							'<span>'+ret.metaList[0].dataName+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>方位描述</span>'+
+							'<span>'+ret.metaList[0].fwContent+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>地理信息坐标</span>'+
+							'<span>'+ret.metaList[0].zdx+'</span>'+
+						'</p>'+
+						'<p class="list">'+
+							'<span></span>'+
+							'<span>'+ret.metaList[0].zdy+'</span>'+
+						'</p>'+
+						'<p class="list">'+
+							'<span></span>'+
+							'<span>'+ret.metaList[0].zxx+'</span>'+
+						'</p>'+
+						'<p class="list">'+
+							'<span></span>'+
+							'<span>'+ret.metaList[0].zxy+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务类型</span>'+
+							'<span>'+ret.metaList[0].fwlx+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>分辨率</span>'+
+							'<span>'+ret.metaList[0].fbl+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>卫星类型</span>'+
+							'<span>'+ret.metaList[0].wxlx+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务生成时间</span>'+
+							'<span>'+ret.metaList[0].yxNewTime+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>时相</span>'+
+							'<span>'+ret.metaList[0].sx+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>来源</span>'+
+							'<span>'+ret.metaList[0].yxSource+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>原始影像采集单位</span>'+
+							'<span>'+ret.metaList[0].yxcjdw+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像处理单位</span>'+
+							'<span>'+ret.metaList[0].yxcldw+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像审定者</span>'+
+							'<span>'+ret.metaList[0].yxsdr+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像审定单位</span>'+
+							'<span>'+ret.metaList[0].yxsdr+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像审定时间</span>'+
+							'<span>'+ret.metaList[0].yxsdsj+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>数据密集</span>'+
+							'<span>'+ret.metaList[0].sjmj+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>知识产权归属</span>'+
+							'<span>'+ret.metaList[0].cqgs+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>审核人</span>'+
+							'<span>'+ret.metaList[0].shPop+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>审核时间</span>'+
+							'<span>'+ret.metaList[0].shTime+'</span>'+
+						'</p>';
+				$(".peray-body").html(div);
+				loadBaiduMap(ret.list[0].address);
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+	$("body").addClass("peray-open").css("padding-right","17px");
+	$("#myPeray").show();
+	var timer = setTimeout(function(){
+		$("#myPeray").addClass("in");
+		clearTimeout(timer);
+	},0);
+}
+
+
+$(document).on('click',function(e){
+	if(e.target.className == 'e'|| e.target.id == 'myPeray'){
+		$("body").removeClass("peray-open").css("padding-right","0px");
+		$("#myPeray").removeClass("in");
+		var timer = setTimeout(function(){
+			$("#myPeray").hide();
+			clearTimeout(timer);
+		},0);
+	}
+})
+
+//取消订阅
+function cancle(id){
+	var msg = "您真的确定要取消吗";
+	if (confirm(msg)==true){
+		$.ajax({
+			type: "post",
+			url: "myService!delete.action", 
+			data: {"serviceId":id},
+			dataType: "json",
+			success: function (ret) {
+				getdata(1,true);
+			},
+			error: function (ret, ret1, ret2) {
+				debugger;
+			}
+		});
+	}else{
+		return false;
+	}
+}
+
+
+//查询检索
+function searchData(){
+	var keyword = $('#key').val();
+	$.ajax({
+		type: "post",
+		url: "myService!searchKey.action", 
+		data: {"userId":userId,"info":keyword},
+		dataType: "json",
+		success: function (ret) {
+			ret = eval(ret);
+			var totalitems = ret.num;
+			var div = "";
+//			$("#searKey").html("共"+totalitems+"条记录");
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i].time.time);
+							var Y = date.getFullYear() + '-';
+							var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							var D = date.getDate();
+					
+						div += '<tr>'+
+							'<td>'+(i+1)+'</td>'+
+							'<td>'+ret.list[i].serviceName+'</td>'+
+							'<td>'+Y+M+D+'</td>'+
+							'<td>'+
+								'<button class="btn btn-primary btn-xs" onclick="detail('+ret.list[i].parentId+')">查看</button>'+
+								'<button class="btn btn-danger btn-xs" onclick="cancle('+ret.list[i].serviceId+')">取消订阅</button>'+
+							'</td>'+
+						'</tr>';
+				}
+			}
+			$("#tbody").html(div);
+			$("#myTable").trigger("update");
+
+			if(b){
+				initPage(totalitems);
+			}
+			
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};

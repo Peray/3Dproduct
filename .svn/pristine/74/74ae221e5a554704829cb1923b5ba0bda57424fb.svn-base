@@ -1,0 +1,57 @@
+'use strict';
+/**
+ * index.js
+ * @authors Your Name (you@example.org)
+ * @date    2017-06-20 11:27:49
+ * @version $Id$
+ */
+
+ //hover
+var $saw_li = $(".saw li");
+
+var $detial_li = $(".detial li");
+
+var imgSrc,imgSrc1,str,index;
+
+$saw_li.mouseover(function() {
+	
+	index = $(this).index();
+
+	imgSrc = $(this).find("img")[0].src;
+	
+	str = imgSrc.substring(imgSrc.length-10, imgSrc.length-8);
+
+	imgSrc1 = imgSrc.replace(str,'/2');
+
+	$(this).find("img").attr("src",imgSrc1);
+
+	if(index == 2){
+		$(this).find(".detial").css("left",(index-1)*192+25).show();
+
+		$(this).find(".detial").children('span').css("left",(index-1)*192+50);
+
+	}else if(index == 3){
+		$(this).find(".detial").css("left",((index-2)*192)+25).show();
+
+		$(this).find(".detial").children('span').css("left",(index-1)*192+50);
+
+	}else if(index == 4){
+		$(this).find(".detial").css("left",((index-2)*192)+25).show();
+
+		$(this).find(".detial").children('span').css("left",(index-2)*192+50);
+
+	}else{
+
+		$(this).find(".detial").css("left",(index*192)+25).show();
+
+	}
+
+});
+
+$saw_li.mouseout(function() {
+	
+	$(this).find("img").attr("src",imgSrc);
+
+	$(this).find(".detial").hide();
+
+});

@@ -1,0 +1,22 @@
+package com.eastdawn.bo.impl;
+
+import com.eastdawn.dao.MyServiceDao;
+import com.eastdawn.bo.MyServiceBO;
+import com.eastdawn.common.CommonBO;
+import com.eastdawn.po.MyService;
+
+@SuppressWarnings("serial")
+public class MyServiceBOImpl extends CommonBO implements MyServiceBO {
+	private MyServiceDao myServiceDao;
+ 
+	public Long add(MyService myService) {
+		myServiceDao.add(myService);
+		return myService.getServiceId();
+	}
+	public MyServiceDao getMyServiceDao() {
+		return myServiceDao;
+	}
+	public void setMyServiceDao(MyServiceDao myServiceDao) {
+		this.myServiceDao = myServiceDao;
+	}
+}

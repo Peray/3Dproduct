@@ -1,0 +1,15 @@
+package com.eastdawn.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.eastdawn.po.MyService;
+
+@SuppressWarnings("unchecked")
+public interface MyServiceDao {
+
+	public List<MyService> queryMSByPage(Map queryMap);
+	public void add(MyService myService);
+	public Long getMSCountByPage(Map queryMap);
+	public void deleteById(Long serviceId);
+}

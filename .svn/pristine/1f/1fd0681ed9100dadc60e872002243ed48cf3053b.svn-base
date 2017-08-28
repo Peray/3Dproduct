@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>信息资源</title>
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/frame.css">
+	<link rel="stylesheet" href="css/service.css">
+	<link rel="stylesheet" href="css/banner.css" />
+</head>
+<body>
+	<header>
+		<img class="logo" src="" alt="">
+		<nav class="clearfix">
+			<ul class="clearfix">
+				<li><img src="img/01_03.png" alt="三维展示"><a href="">三维展示</a></li>
+				<li><img src="img/02_05.png" alt="服务资源"><a href="service.html">服务资源</a></li>
+				<li><img src="img/03_07.png" alt="典型应用"><a href="">典型应用</a></li>
+				<li><img src="img/04_09.png" alt="我的资源"><a href="own.html">我的资源</a></li>
+				<li><img src="img/05_11.png" alt="运维管理"><a href="">运维管理</a></li>
+			</ul>
+			<div class="sign-in">
+				<img src="img/zc_13.png" alt="登录/注册">
+				<a href="login.html" class="text">注册</a>
+				<span>|</span>
+				<a href="login.html" class="text">登录</a>
+			</div>
+		</nav>	
+	</header>
+	<article>
+		<div class="out">
+			<ul class="tu">
+				<li><a href="#"><img src="img/banner/2.jpg" style="width:100%;height:200px;" /></a></li>
+				<li><a href="#"><img src="img/banner/3.jpg" style="width:100%;height:200px;" /></a></li>
+				<li><a href="#"><img src="img/banner/5.jpg" style="width:100%;height:200px;" /></a></li>
+			</ul>
+			<ul class="shu">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+			<div class="search clearfix">
+				<input class="input-l" type="text" value="" placeholder="搜索提示...">
+				<input class="input-r" type="button" value="服务检索">
+			</div>
+		</div>
+	</article>
+	<section class="clearfix">
+		<aside>
+			
+		</aside>
+		<div class="section">
+			<div class="title clearfix">
+				<p>
+					<a href="javascript:void(0);">首页</a>
+					<a class="icon" href="javascript:void(0);">></a>
+					<a href="javascript:void(0);">服务资源</a>
+				</p>
+				<p>带关键字xx的内容，共检出12条记录</p>
+			</div>
+			<ul>
+				<li class="content-list">
+					<h1>
+						<span>国家基础测绘地理信息最新</span>
+						<b>更多...</b>
+					</h1>
+					<figure class="clearfix">
+						<img src="img/pic2_30.png" alt="标签" title="标签" />
+						<figcaption>
+							<p>
+								<strong>地址：</strong>
+								<span>海淀区</span>
+							</p>
+							<p>
+								<strong>描述：</strong>
+								<span>国家基础测绘地理信息最新</span>
+							</p>
+							<p>
+								<strong>发布人：</strong>
+								<span>狄娜</span>
+							</p>
+							<p>
+								<strong>发布时间：</strong>
+								<span>2017-07-07</span>
+								<span class="skim">4343浏览</span>
+							</p>
+						</figcaption>
+					</figure>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<footer>
+		<div class="footer">
+			<p class="fp">
+				<a href="javascript:void(0);">联系我们</a>
+				<span>|</span>
+				<a href="javascript:void(0);">服务说明</a>
+				<span>|</span>
+				<a href="javascript:void(0);">意见反馈</a>
+			</p>
+			<!-- <p>
+				<a href="javascript:void(0);">国家测绘地理信息局&nbsp;&nbsp;监制</a>
+				<a href="javascript:void(0);">国家基础地理信息中心&nbsp;&nbsp;版权所有</a>
+			</p>
+			<p>
+				<a href="javascript:void(0);">甲测资字1100222</a>
+				<a href="javascript:void(0);">京ICP备1200922号-2</a>
+				<a href="javascript:void(0);">京公安网备1101080201222</a>
+			</p> -->
+		</div>
+	</footer>
+
+	<script src="js/jquery-1.8.1.min.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/banner.js"></script>
+	<script src="js/load.js"></script>
+	<script src="js/service.js"></script>
+</body>
+</html>

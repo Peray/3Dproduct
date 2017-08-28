@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <!--  --><property name="url" value="jdbc:mysql://192.168.10.210:3306/spacedata"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <property name="maxActive">
+            <value>30</value>
+        </property>
+        <property name="maxIdle">
+            <value>10</value>
+        </property>
+        <property name="maxWait">
+            <value>5000</value>
+        </property>
+        <property name="initialSize">
+            <value>4</value>
+        </property>
+         <property name="maxOpenPreparedStatements">
+            <value>-1</value>
+        </property>
+    </bean>
+    
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation" value="/WEB-INF/sqlMapConfig.xml"/>
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+</beans>

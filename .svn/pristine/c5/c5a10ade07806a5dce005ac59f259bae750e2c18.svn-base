@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="searchAllMap">
+    
+    <typeAlias alias="searchAll" type="com.eastdawn.po.SearchAll"/>
+    <resultMap id="searchAll-resultMap" class="searchAll" >
+    	<result property="name" column="name"/>
+		<result property="fId" column="FID"/>
+		<result property="point" column="point"/>
+		<result property="source" column="source"/>
+    </resultMap>
+    
+    <typeAlias alias="hupo" type="com.eastdawn.po.Hupo"/>
+    <resultMap id="hupo-resultMap" class="hupo" >
+		<result property="fId" column="FID"/>
+		<result property="geometry" column="geometry"/>
+		<result property="lakeCode" column="lake_Code"/>
+		<result property="shapeLeng" column="shape_Leng"/>
+		<result property="name" column="name"/>
+		<result property="shapeArea" column="shape_Area"/>
+		<result property="point" column="point"/>
+    </resultMap>
+    
+    <typeAlias alias="heliu" type="com.eastdawn.po.Heliu"/>
+    <resultMap id="heliu-resultMap" class="heliu" >
+    	<result property="fId" column="FID"/>
+		<result property="geometry" column="geometry"/>
+		<result property="hydCode" column="hyd_Code"/>
+		<result property="shapeLeng" column="shape_Leng"/>
+		<result property="name" column="name"/>
+		<result property="objectId" column="object_Id"/>
+		<result property="point" column="point"/>
+    </resultMap>
+    
+    <typeAlias alias="heliut" type="com.eastdawn.po.Heliut"/>
+    <resultMap id="heliut-resultMap" class="heliut" >
+    	<result property="fId" column="FID"/>
+		<result property="geometry" column="geometry"/>
+		<result property="gb" column="gb"/>
+		<result property="hydc" column="hydc"/>
+		<result property="shapeLeng" column="shape_Leng"/>
+		<result property="name" column="name"/>
+		<result property="objectId" column="object_Id"/>
+		<result property="point" column="point"/>
+    </resultMap>
+    
+    <select id="queryAllByPage"  resultMap="searchAll-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_newsearall
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="source"> 
+  				and source = #source#
+  			</isNotEmpty>
+  			<isNotEmpty property="name"> 
+  				and name like '%$name$%'
+  			</isNotEmpty>
+        </dynamic>
+         order by FID desc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="getAllCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_newsearall
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotEmpty property="source"> 
+	  				and source = #source#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="name"> 
+	  				and name like '%$name$%'
+	  			</isNotEmpty>
+			</dynamic>
+ 	 </select>
+ 	 
+ 	 <select id="queryHPAllByPage"  resultMap="hupo-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_hupo
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="fId"> 
+  				and FID = #fId#
+  			</isNotEmpty>
+        </dynamic>
+     </select>
+     
+     <select id="queryHLAllByPage"  resultMap="heliu-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_heliu
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="fId"> 
+  				and FID = #fId#
+  			</isNotEmpty>
+        </dynamic>
+     </select>
+     
+     <select id="queryHLTAllByPage"  resultMap="heliut-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_heliu_two
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="fId"> 
+  				and FID = #fId#
+  			</isNotEmpty>
+        </dynamic>
+     </select>
+</sqlMap>

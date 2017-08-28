@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="adminMap">
+    
+    <typeAlias alias="admin" type="com.eastdawn.po.Admin"/>
+    
+    <resultMap id="admin-resultMap" class="admin" >
+    	<result property="adminId" column="admin_id"/>
+		<result property="adminName" column="admin_Name"/>
+		<result property="adminPwd" column="admin_Pwd"/>
+		<result property="userName" column="user_Name"/>
+    </resultMap>
+    
+ 	<select id="getAdminById"  resultMap="admin-resultMap" parameterClass="int">
+  		select * from admin where admin_id=#admin_id#
+ 	</select>
+ 	
+ 	<select id="queryAdminByPage"  resultMap="admin-resultMap" parameterClass="java.util.HashMap">
+ 		select * from (
+ 			select rownum row_num, aa.* from (
+ 				select t.* from admin t
+ 			<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="adminName"> 
+  				and admin_Name = #adminName# 
+  			</isNotEmpty>
+  			<isNotEmpty property="adminPwd"> 
+  				and admin_Pwd = #adminPwd# 
+  			</isNotEmpty>
+  			
+  			<isNotEmpty property="userName"> 
+  				and user_Name = #userName# 
+  			</isNotEmpty>
+        </dynamic>
+        )aa
+        <dynamic prepend="where">
+	  				1=1
+		  			<isNotEmpty property="numEnd"> 
+	  				<![CDATA[
+	  					and rownum <= #numEnd#
+	  				]]>	
+	  				</isNotEmpty>
+  				</dynamic>
+  		) bb 
+  		<dynamic prepend="where">
+			1=1
+ 			<isNotEmpty property="numStart"> 
+			<![CDATA[
+				and bb.row_num > #numStart#
+			]]>	
+			</isNotEmpty>
+ 		</dynamic>
+     </select>
+</sqlMap>

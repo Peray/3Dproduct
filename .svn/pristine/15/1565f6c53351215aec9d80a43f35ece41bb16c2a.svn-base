@@ -1,0 +1,19 @@
+'use strict'
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-29 11:28:33
+ * @version $Id$
+ */
+$(function() {
+	//表单验证
+	var $form = $('#addForm');
+	$form.validator({
+		  validate:function(validity) {
+		    // 在这里编写你的验证逻辑
+		  		if(validity.valid == true){
+		  			alert(111)
+		  		}
+		  }
+	});
+});

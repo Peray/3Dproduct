@@ -1,0 +1,89 @@
+<!doctype html>
+<html class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>运维管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+	
+	<div class="am-cf am-margin">
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<div class="am-cf">日志管理</div>
+				<div class="am-cf ">
+					<button type="button" class="am-fr am-btn am-btn-secondary am-radius"  target="main">
+						<i class="am-icon-search"></i>查询
+					</button>
+					<div class="am-form am-form-inline am-fr am-right">
+						<div class="am-form-group am-form-icon">
+							<i class="am-icon-calendar"></i>
+							<input type="date" class="am-form-field" placeholder="日期">
+						</div>
+						<span> - </span>
+						<div class="am-form-group am-form-icon">
+							<i class="am-icon-calendar"></i>
+							<input type="date" class="am-form-field" placeholder="时间">
+						</div>
+					</div>
+				</div>
+				<table class="am-table am-table-bordered am-table-radius am-table-striped am-top">
+					<thead>
+						<tr>
+							<th>登录时间</th>
+							<th>用户名称</th>
+							<th>登出时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>2017-01-01 12：00：00</td>
+							<td>张三</td>
+							<td>2017-01-01 18：00：00</td>
+							<td>
+								<button class="am-btn am-btn-success am-radius am-btn-xs">已审核</button>
+								<button class="am-btn am-btn-danger am-radius am-btn-xs">冻结</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<ul class="am-pagination am-fr admin-content-pagination">
+					<li class="am-disabled"><a href="#">«</a></li>
+					<li class="am-active"><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">5</a></li>
+					<li><a href="#">»</a></li>
+				</ul>
+			</div>
+			<div class="am-u-sm-12">
+				<div class="am-cf am-top">
+					<button type="button" class="am-fr am-btn am-btn-success am-radius">
+						<i class="am-icon-table"></i>导出Excle表格
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	<!--[if (gte IE 9)|!(IE)]><!-->
+		<script src="js/jquery-1.8.1.min.js"></script>
+	<!--<![endif]-->
+	<script src="js/amazeui.min.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>

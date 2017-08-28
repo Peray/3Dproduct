@@ -1,0 +1,690 @@
+package com.eastdawn.action;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.eastdawn.bo.FilesBO;
+import com.eastdawn.bo.MetadataBO;
+import com.eastdawn.bo.ServiceGlBO;
+import com.eastdawn.dao.FilesDao;
+import com.eastdawn.dao.MetadataDao;
+import com.eastdawn.dao.ServiceGlDao;
+import com.eastdawn.po.Files;
+import com.eastdawn.po.Metadata;
+import com.eastdawn.po.ServiceGl;
+
+@SuppressWarnings("serial")
+public class ServiceGlAction{
+	
+	private Long glId;//服务管理ID
+	private String glNumber;//服务编号
+	private String glName;//服务名称
+	private String address;//地址
+	private String content;//描述
+	private Date fbTime;//服务发布时间
+	private String fbPop;//发布人
+	
+	private Long statr;
+	private Long totalNum;
+	private String arlt;
+	private String fileName;
+	private ServiceGl serviceGl;
+	private ServiceGlDao glDao;
+	private ServiceGlBO glBO;
+	
+	private Files files;
+	private FilesDao fileDao;
+	private FilesBO fileBO;
+	private List glList;
+	private List fileList;
+	private List metaList;
+	
+	private Long dataId;//服务ID
+	private String dataName;//服务名称
+	private String fwContent;//方位描述
+	private String zdx;//地理信息坐标(最大X)
+	private String zdy;//最大Y
+	private String zxx;//最小X
+	private String zxy;//最小Y
+	private String fbl;//影像分辨率
+	private String yxType;//服务类型
+	private String yxNewTime;//服务生成时间
+	private String yxSource;//来源
+	private String yxcjdw;//原始影像采集单位
+	private String yxcldw;//影像处理单位
+	private String yxsdr;//影像审定者
+	private String yxsddw;//影像审定单位
+	private String yxsdsj;//影像审定时间
+	private String sjmj;//数据密集
+	private String cqgs;//知识产权归属
+    private String shPop;//审核人
+    private Date shTime;//审核时间
+    private Long parentId;//所属记录ID
+    
+    private Long xgId;//管理ID
+    
+    private MetadataDao metadataDao;
+    private MetadataBO metadataBO;
+    
+	//服务管理添加
+	public String add() throws Exception {
+		HttpServletResponse response =ServletActionContext.getResponse();
+		Map queryMap = new HashMap();
+		ServiceGl gl = new ServiceGl();
+		try {
+			gl.setGlName(this.glName);
+			gl.setGlNumber(this.glNumber);
+			gl.setFbTime(new Date());
+			gl.setAddress(this.arlt);
+			gl.setContent(this.content);
+			gl.setFbPop(this.fbPop);
+			glBO.add(gl);
+			glId = glDao.getGLById(queryMap);
+			if(this.arlt != null && !this.arlt.equals("")){
+				this.fileAdd();
+			}
+			this.metadataAdd();
+			response.sendRedirect("../Service-manag.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
+	public String fileAdd() throws Exception {
+		Files files = new Files();
+//		String []list=arlt.split("\\");
+		String image = arlt.substring(arlt.lastIndexOf("/")+1);
+	    files.setOnlinePath(image);
+	    files.setFileName(image);
+	    files.setParentId(this.glId);
+	    fileBO.add(files);
+	    return null;
+	}
+
+	
+	public String metadataAdd() throws Exception {
+		Metadata metadata = new Metadata();
+		
+		metadata.setDataName(this.dataName);
+		metadata.setFwContent(this.fwContent);
+		metadata.setZdx(this.zdx);
+		metadata.setZdy(this.zdy);
+		metadata.setZxx(this.zxx);
+		metadata.setZxy(this.zxy);
+		metadata.setFbl(this.fbl);
+		metadata.setYxType(this.yxType);
+		metadata.setYxNewTime(this.yxNewTime);
+		metadata.setYxSource(this.yxSource);
+		metadata.setYxcjdw(this.yxcjdw);
+		metadata.setYxcldw(this.yxcldw);
+		metadata.setYxsdr(this.yxsdr);
+		metadata.setYxsddw(this.yxsddw);
+		metadata.setYxsdsj(this.yxsdsj);
+		metadata.setSjmj(this.sjmj);
+		metadata.setCqgs(this.cqgs);
+		metadata.setShPop(this.shPop);
+		metadata.setShTime(this.shTime);
+		metadata.setParentId(this.glId);
+		metadataBO.add(metadata);
+	    return null;
+	}
+	
+	//服务查询
+	public String execute() throws Exception {
+		HttpServletResponse iResponse =ServletActionContext.getResponse();
+		
+		Map queryMap = new HashMap();
+		try {
+			if(this.glId != null && !this.glId.equals("")){
+			    queryMap.put("glId", glId);
+			}
+			totalNum = glDao.getGLCountByPage(queryMap);
+			System.out.println(totalNum);
+			if(statr == null){
+				queryMap.put("numStart", 0);
+			}else{
+				queryMap.put("numStart", (statr-1)*10);
+			}
+			glList = glDao.queryGLByPage(queryMap);
+			
+			JSONObject object = new JSONObject();
+	        object.put("num", totalNum); 
+	        object.put("list", glList); 
+	        System.out.println(totalNum+object.toString());
+	        iResponse.setCharacterEncoding("utf-8");
+	        iResponse.getWriter().write(object.toString());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
+	
+	public String detail() throws ParseException, IOException{
+//		this.update();
+		HttpSession session = ServletActionContext.getRequest().getSession();
+		HttpServletResponse iResponse =ServletActionContext.getResponse();
+		Map queryMap = new HashMap();
+		try {
+			queryMap.put("glId", glId);
+			queryMap.put("parentId", glId);
+			queryMap.put("parentId", glId);
+			glList = glDao.queryGLByPage(queryMap);
+			fileList = fileDao.queryFileByPage(queryMap);
+			metaList = metadataDao.queryMetadataByPage(queryMap);
+			
+			JSONObject object = new JSONObject();  
+	        object.put("list", glList); 
+	        object.put("fileList", fileList);
+	        object.put("metaList", metaList);
+	        System.out.println(object.toString());
+	        iResponse.setCharacterEncoding("utf-8");
+	        iResponse.getWriter().write(object.toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public void delete() throws Exception{
+		System.out.println("Start to execute delete Action!");
+		HttpServletResponse iResponse =ServletActionContext.getResponse();
+		HttpServletRequest request = ServletActionContext.getRequest();
+		Map queryMap = new HashMap();
+		String path = request.getSession().getServletContext().getRealPath("\\share");  
+		
+		try {
+			glId = Long.parseLong(request.getParameter("glId"));
+			queryMap.put("glId", glId);
+			queryMap.put("parentId", glId);
+			queryMap.put("parentId", glId);
+			
+			glList = glDao.queryGLByPage(queryMap);
+			fileList = fileDao.queryFileByPage(queryMap);
+			metaList = metadataDao.queryMetadataByPage(queryMap);
+			
+			for(int i=0;i<fileList.size();i++){
+				files = (Files)fileList.get(i);
+		        String filePath = path + "\\" + files.getOnlinePath();
+		        System.out.println(filePath);
+		        File file = new File(filePath);
+		        System.out.println(file.exists() +"-----"+ file.isFile());
+				if (file.exists() && file.isFile()) {
+		           file.delete();
+		           System.out.println("删除成功");
+		        }
+			}
+			glDao.deleteById(glId);
+			fileDao.deleteById(glId);
+			metadataDao.deleteById(glId);
+			iResponse.getWriter().write("1");
+		} catch (Exception e) {
+			e.printStackTrace();
+			iResponse.getWriter().write("2");
+		}
+	}
+	
+	//服务更新
+	public void update() throws ParseException{
+		ServiceGl gl = new ServiceGl();
+		try{
+			xgId = getGlId();
+			gl.setGlId(getGlId());
+			gl.setGlName(getGlName());
+			gl.setGlNumber(getGlNumber());
+			gl.setAddress(getArlt());
+			gl.setContent(getContent());
+			gl.setFbTime(new Date());
+			glBO.updateById(gl);
+			if(this.arlt != null && !this.arlt.equals("")){
+				this.fileUpdata();
+			}
+			this.metadataUpdata();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String fileUpdata() throws Exception {
+		Files files = new Files();
+		System.out.print(xgId);
+//		String []list=arlt.split("\\");
+		String image = arlt.substring(arlt.lastIndexOf("/")+1);
+	    files.setOnlinePath(image);
+	    files.setFileName(image);
+	    files.setParentId(xgId);
+	    fileBO.updateById(files);
+	    return null;
+	}
+	
+	public String metadataUpdata() throws Exception {
+		Metadata metadata = new Metadata();
+		
+		metadata.setDataName(this.dataName);
+		metadata.setFwContent(this.fwContent);
+		metadata.setZdx(this.zdx);
+		metadata.setZdy(this.zdy);
+		metadata.setZxx(this.zxx);
+		metadata.setZxy(this.zxy);
+		metadata.setFbl(this.fbl);
+		metadata.setYxType(this.yxType);
+		metadata.setYxNewTime(this.yxNewTime);
+		metadata.setYxSource(this.yxSource);
+		metadata.setYxcjdw(this.yxcjdw);
+		metadata.setYxcldw(this.yxcldw);
+		metadata.setYxsdr(this.yxsdr);
+		metadata.setYxsddw(this.yxsddw);
+		metadata.setYxsdsj(this.yxsdsj);
+		metadata.setSjmj(this.sjmj);
+		metadata.setCqgs(this.cqgs);
+		metadata.setShPop(this.shPop);
+		metadata.setShTime(this.shTime);
+		metadata.setParentId(xgId);
+		metadataBO.updateById(metadata);
+	    return null;
+	}
+	
+	public String deleteFile() throws IOException {
+		HttpServletRequest request = ServletActionContext.getRequest();	
+		HttpServletResponse response = ServletActionContext.getResponse();
+		String path = request.getSession().getServletContext().getRealPath("\\share");  
+        System.out.println(path);
+        String filePath = path + "\\" + this.fileName;
+        System.out.println(filePath);
+        File file = new File(filePath);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            file.delete();
+            response.setCharacterEncoding("UTF-8"); 
+			response.getWriter().write("1");
+        } else {
+        	response.setCharacterEncoding("UTF-8"); 
+			response.getWriter().write("2");
+        }
+		return null;
+    }
+	
+	//查询当日发布数据
+	public String searchNumber() throws IOException{
+		HttpServletResponse iResponse =ServletActionContext.getResponse();
+		Map queryMap = new HashMap();
+		try {
+		    queryMap.put("fbTime", new Date());
+			totalNum = glDao.getGLCountByNum(queryMap);
+			JSONObject object = new JSONObject();  
+	        object.put("num", totalNum); 
+	        iResponse.setCharacterEncoding("utf-8");
+	        iResponse.getWriter().write(object.toString());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		return address;
+	}
+	public Long getGlId() {
+		return glId;
+	}
+
+	public void setGlId(Long glId) {
+		this.glId = glId;
+	}
+
+	public String getGlNumber() {
+		return glNumber;
+	}
+
+	public void setGlNumber(String glNumber) {
+		this.glNumber = glNumber;
+	}
+
+	public String getGlName() {
+		return glName;
+	}
+
+	public void setGlName(String glName) {
+		this.glName = glName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Date getFbTime() {
+		return fbTime;
+	}
+
+	public void setFbTime(Date fbTime) {
+		this.fbTime = fbTime;
+	}
+
+	public String getFbPop() {
+		return fbPop;
+	}
+
+	public void setFbPop(String fbPop) {
+		this.fbPop = fbPop;
+	}
+
+	public Long getStatr() {
+		return statr;
+	}
+
+	public void setStatr(Long statr) {
+		this.statr = statr;
+	}
+
+	public Long getTotalNum() {
+		return totalNum;
+	}
+
+	public void setTotalNum(Long totalNum) {
+		this.totalNum = totalNum;
+	}
+
+	public String getArlt() {
+		return arlt;
+	}
+
+	public void setArlt(String arlt) {
+		this.arlt = arlt;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public ServiceGl getServiceGl() {
+		return serviceGl;
+	}
+
+	public void setServiceGl(ServiceGl serviceGl) {
+		this.serviceGl = serviceGl;
+	}
+
+	public ServiceGlDao getGlDao() {
+		return glDao;
+	}
+
+	public void setGlDao(ServiceGlDao glDao) {
+		this.glDao = glDao;
+	}
+
+	public ServiceGlBO getGlBO() {
+		return glBO;
+	}
+
+	public void setGlBO(ServiceGlBO glBO) {
+		this.glBO = glBO;
+	}
+
+	public Files getFiles() {
+		return files;
+	}
+
+	public void setFiles(Files files) {
+		this.files = files;
+	}
+
+	public FilesDao getFileDao() {
+		return fileDao;
+	}
+
+	public void setFileDao(FilesDao fileDao) {
+		this.fileDao = fileDao;
+	}
+
+	public FilesBO getFileBO() {
+		return fileBO;
+	}
+
+	public void setFileBO(FilesBO fileBO) {
+		this.fileBO = fileBO;
+	}
+
+	public List getGlList() {
+		return glList;
+	}
+
+	public void setGlList(List glList) {
+		this.glList = glList;
+	}
+
+	public List getFileList() {
+		return fileList;
+	}
+
+	public void setFileList(List fileList) {
+		this.fileList = fileList;
+	}
+
+	public List getMetaList() {
+		return metaList;
+	}
+
+	public void setMetaList(List metaList) {
+		this.metaList = metaList;
+	}
+
+	public Long getDataId() {
+		return dataId;
+	}
+
+	public void setDataId(Long dataId) {
+		this.dataId = dataId;
+	}
+
+	public String getDataName() {
+		return dataName;
+	}
+
+	public void setDataName(String dataName) {
+		this.dataName = dataName;
+	}
+
+	public String getFwContent() {
+		return fwContent;
+	}
+
+	public void setFwContent(String fwContent) {
+		this.fwContent = fwContent;
+	}
+
+	public String getZdx() {
+		return zdx;
+	}
+
+	public void setZdx(String zdx) {
+		this.zdx = zdx;
+	}
+
+	public String getZdy() {
+		return zdy;
+	}
+
+	public void setZdy(String zdy) {
+		this.zdy = zdy;
+	}
+
+	public String getZxx() {
+		return zxx;
+	}
+
+	public void setZxx(String zxx) {
+		this.zxx = zxx;
+	}
+
+	public String getZxy() {
+		return zxy;
+	}
+
+	public void setZxy(String zxy) {
+		this.zxy = zxy;
+	}
+
+	public String getFbl() {
+		return fbl;
+	}
+
+	public void setFbl(String fbl) {
+		this.fbl = fbl;
+	}
+
+	public String getYxType() {
+		return yxType;
+	}
+
+	public void setYxType(String yxType) {
+		this.yxType = yxType;
+	}
+
+	public String getYxNewTime() {
+		return yxNewTime;
+	}
+
+	public void setYxNewTime(String yxNewTime) {
+		this.yxNewTime = yxNewTime;
+	}
+
+	public String getYxSource() {
+		return yxSource;
+	}
+
+	public void setYxSource(String yxSource) {
+		this.yxSource = yxSource;
+	}
+
+	public String getYxcjdw() {
+		return yxcjdw;
+	}
+
+	public void setYxcjdw(String yxcjdw) {
+		this.yxcjdw = yxcjdw;
+	}
+
+	public String getYxcldw() {
+		return yxcldw;
+	}
+
+	public void setYxcldw(String yxcldw) {
+		this.yxcldw = yxcldw;
+	}
+
+	public String getYxsdr() {
+		return yxsdr;
+	}
+
+	public void setYxsdr(String yxsdr) {
+		this.yxsdr = yxsdr;
+	}
+
+	public String getYxsddw() {
+		return yxsddw;
+	}
+
+	public void setYxsddw(String yxsddw) {
+		this.yxsddw = yxsddw;
+	}
+
+	public String getYxsdsj() {
+		return yxsdsj;
+	}
+
+	public void setYxsdsj(String yxsdsj) {
+		this.yxsdsj = yxsdsj;
+	}
+
+	public String getSjmj() {
+		return sjmj;
+	}
+
+	public void setSjmj(String sjmj) {
+		this.sjmj = sjmj;
+	}
+
+	public String getCqgs() {
+		return cqgs;
+	}
+
+	public void setCqgs(String cqgs) {
+		this.cqgs = cqgs;
+	}
+
+	public String getShPop() {
+		return shPop;
+	}
+
+	public void setShPop(String shPop) {
+		this.shPop = shPop;
+	}
+
+	public Date getShTime() {
+		return shTime;
+	}
+
+	public void setShTime(Date shTime) {
+		this.shTime = shTime;
+	}
+
+	public Long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+
+	public MetadataDao getMetadataDao() {
+		return metadataDao;
+	}
+
+	public void setMetadataDao(MetadataDao metadataDao) {
+		this.metadataDao = metadataDao;
+	}
+
+	public MetadataBO getMetadataBO() {
+		return metadataBO;
+	}
+
+	public void setMetadataBO(MetadataBO metadataBO) {
+		this.metadataBO = metadataBO;
+	}
+
+	public Long getXgId() {
+		return xgId;
+	}
+
+	public void setXgId(Long xgId) {
+		this.xgId = xgId;
+	}
+	
+}

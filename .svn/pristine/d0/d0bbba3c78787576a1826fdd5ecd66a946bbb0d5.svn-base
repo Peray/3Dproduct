@@ -1,0 +1,138 @@
+$(window).load(function() {
+	getdata(1,true);
+});
+
+$('.input-r').click(function() {
+	searchData(1,true);
+});
+
+var rp = 10;
+
+//加载管理信息
+function getdata(page,b){
+	$.ajax({
+		type:'post',
+		url: 'gl!execute.action',
+		dataType: 'json',
+		data: { statr: page,rp:rp},
+		success:function(ret){
+			ret = eval(ret);
+			var div = "";
+			totalitems = ret.num;
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i].fbTime.time);
+							Y = date.getFullYear() + '-';
+							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							D = date.getDate();
+					div += '<figure class="clearfix"><img src="img/pic2_30.png" alt="标签" title="标签" /><figcaption>'+
+								'<p><strong>服务名称：</strong><span>'+ret.list[i].glName+'</span></p>'+
+								'<p><strong>描述：</strong><span>'+ret.list[i].content+'</span></p>'+
+								'<p><strong>发布人：</strong><span>狄娜</span></p>'+
+								'<p><strong>发布时间：</strong><span>'+Y+M+D+'</span><span class="skim">4343浏览</span></p>'+
+								'</figcaption></figure>'
+				}
+			}
+			$(".listService").html(div);
+
+			if(b){
+				initPage(totalitems);
+			}
+			
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};
+
+//分页
+function initPage(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+				if(num!=1){
+					getdata(num,false);
+				}if(num == 1){
+					getdata(1,false);
+				}
+			}
+		});
+	}
+}
+
+//根据关键字查询
+function searchData(page,b){
+	var key = $('#key').val();
+	$.ajax({
+	        type: "post",
+	        url: "gl!searchKey.action", //url, //
+	        data: {"statr": page,"info":key},
+	        dataType: "json",
+	        success: function (ret) {
+	 			ret = eval(ret);
+				var div = "";
+				pageNum = ret.num;
+				if (pageNum == 0) {
+					div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+				}else{
+					for (var i = 0; i < ret.list.length; i++) {
+						var date = new Date(ret.list[i].fbTime.time);
+								Y = date.getFullYear() + '-';
+								M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+								D = date.getDate();
+						div += '<figure class="clearfix"><img src="img/pic2_30.png" alt="标签" title="标签" /><figcaption>'+
+									'<p><strong>服务名称：</strong><span>'+ret.list[i].glName+'</span></p>'+
+									'<p><strong>描述：</strong><span>'+ret.list[i].content+'</span></p>'+
+									'<p><strong>发布人：</strong><span>狄娜</span></p>'+
+									'<p><strong>发布时间：</strong><span>'+Y+M+D+'</span><span class="skim">4343浏览</span></p>'+
+									'</figcaption></figure>'
+					}
+				}
+				$(".listService").html(div);
+				if(b){
+					initPage(pageNum);
+				}
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+}
+
+
+var $list_li  = $(".list-item li");
+
+$list_li.click(function() {
+	
+	$(this).addClass('active').siblings("li").removeClass('active');
+
+});
+
+
+function xila(id){
+
+	if($(".fh"+id).text() == "∨"){
+
+		$(".fh"+id).siblings("ul").children('li').not(".show").show();
+
+		$(".fh"+id).text("∧");
+
+	}else if($(".fh"+id).text() == "∧"){
+
+		$(".fh"+id).siblings("ul").children('li').not(".show").hide();
+
+		$(".fh"+id).text("∨");
+		
+	}
+}

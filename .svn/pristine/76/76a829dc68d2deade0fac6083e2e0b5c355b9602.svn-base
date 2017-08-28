@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<import resource="ibatis-config.xml"/>
+    
+    <!-- 配置事务拦截器 -->
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">  
+        <property name="transactionManager">  
+            <ref local="transactionManager" />  
+        </property>  
+        <property name="transactionAttributes">
+            <props>
+            	<prop key="get*">PROPAGATION_REQUIRED</prop>
+                <prop key="query*">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete*">PROPAGATION_REQUIRED</prop>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+            	<prop key="*">PROPAGATION_REQUIRED, readOnly</prop>
+            </props>
+        </property>  
+    </bean>
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+	    <!--  如果服务层对象是接口实现类，则需要设置proxyTargetClass属性为true -->
+	    <property name="proxyTargetClass" value="false" />
+        <property name="beanNames">  
+            <list>
+            	<value>*BO</value>
+            </list>  
+        </property>  
+        <property name="interceptorNames">  
+            <list>  
+                <value>transactionInterceptor</value>  
+            </list>  
+        </property>  
+    </bean>
+    
+    <bean id="transactionManager"    
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+</beans>

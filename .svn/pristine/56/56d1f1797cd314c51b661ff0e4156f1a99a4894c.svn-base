@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="userMap">
+    
+    <typeAlias alias="user" type="com.eastdawn.po.User"/>
+    
+    <resultMap id="user-resultMap" class="user" >
+    	<result property="userId" column="user_Id"/>
+		<result property="logName" column="log_Name"/>
+		<result property="logPwd" column="log_Pwd"/>
+		<result property="department" column="department"/>
+		<result property="cName" column="c_Name"/>
+		<result property="email" column="email"/>
+		<result property="status" column="status"/>
+		<result property="addTime" column="add_Time"/>
+		<result property="level" column="level"/>
+		<result property="logTime" column="log_Time"/>
+    </resultMap>
+    
+    <select id="getUserById"  resultMap="user-resultMap" parameterClass="Long">
+  		select * from tb_user where user_Id=#userId#
+ 	</select>
+    
+    <select id="queryUserByPage"  resultMap="user-resultMap" parameterClass="java.util.HashMap">
+ 				select t.* from tb_user t 
+ 			<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="logName"> 
+  				and log_Name = #logName#
+  			</isNotEmpty>
+  			<isNotEmpty property="logonPwd"> 
+  				and log_Pwd = #logPwd#
+  			</isNotEmpty>
+  			<isNotEmpty property="userId"> 
+  				and user_Id = #userId#
+  			</isNotEmpty>
+  			<isNotEmpty property="department"> 
+  				and department = #department#
+  			</isNotEmpty>
+  			<isNotEmpty property="status"> 
+  				and status = #status#
+  			</isNotEmpty>
+        </dynamic>
+         order by t.user_Id asc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>	
+     
+    
+ 	<select id="getUserCountByPage"  resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_user 
+			<dynamic prepend="where">
+				<isNotEmpty prepend="and" property="logName"> 
+	  				log_Name = #logName#
+	  			</isNotEmpty>
+	  			<isNotEmpty prepend="and" property="logPwd"> 
+	  				log_Pwd = #logPwd#
+	  			</isNotEmpty>
+	  			<isNotEmpty prepend="and" property="userId"> 
+	  				user_Id = #userId#
+	  			</isNotEmpty>
+	  			<isNotEmpty property="department"> 
+	  				and department = #department#
+	  			</isNotEmpty>
+	  			<isNotEmpty prepend="and" property="status"> 
+		  		    status = #status#
+		  		</isNotEmpty>
+			</dynamic>
+ 	</select>
+ 	
+ 	 <!-- 类型添加 -->
+     <insert id="add" parameterClass="user"> 
+	 	insert into tb_user(log_Name,log_Pwd,department,c_Name,email,status,add_Time,level) values (#logName#,#logPwd#,#department#,#cName#,#email#,#status#,#addTime#,#level#)
+ 	 </insert>
+ 	 
+ 	 <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_user where user_Id=#userId#
+ 	 </delete>
+ 	<!-- 更新 -->
+	 <update id="deleteUpdateById" parameterClass="user">
+	  	update tb_user set status=#status#
+	  	where user_Id=#userId#
+	 </update>
+ 	 
+ 	 <!-- 密码修改 -->
+ 	 <update id="passwordUpdateById" parameterClass="user">
+  	 	 update tb_user set log_Pwd=#logPwd#
+  		 where user_Id = #userId#
+ 	 </update>
+ 	 
+ 	 <update id="updateLevelById" parameterClass="user">
+	  	update tb_user set level = #level#
+	  	where user_Id=#userId#
+	 </update>
+	 
+	 <update id="updateLogTimeById" parameterClass="user">
+	  	update tb_user set log_Time = #logTime#
+	  	where user_Id=#userId#
+	 </update>
+	 
+	 <select id="queryOnlineUserByPage"  resultMap="user-resultMap" parameterClass="java.util.HashMap">
+ 				select t.* from tb_user t 
+ 			<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="logName"> 
+  				and log_Name = #logName#
+  				and level != 3
+  			</isNotEmpty>
+        </dynamic>
+         order by t.user_Id asc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+</sqlMap>

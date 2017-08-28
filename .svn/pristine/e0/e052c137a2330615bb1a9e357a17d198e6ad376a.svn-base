@@ -1,0 +1,18 @@
+package com.eastdawn.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.eastdawn.po.ServiceGl;
+
+@SuppressWarnings("unchecked")
+public interface ServiceGlDao {
+
+	public List<ServiceGl> queryGLByPage(Map queryMap);
+	public void add(ServiceGl gl);
+	public Long getGLCountByPage(Map queryMap);
+	public void deleteById(Long glId);
+	public void updateById(ServiceGl gl);
+	public Long getGLById(Map queryMap);
+	public Long getGLCountByNum(Map queryMap);
+}

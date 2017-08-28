@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="filesMap">
+    
+    <typeAlias alias="files" type="com.eastdawn.po.Files"/>
+    
+    <resultMap id="files-resultMap" class="files" >
+    	<result property="fileId" column="file_id"/>	
+    	<result property="fileName" column="file_name"/>	
+		<result property="onlinePath" column="online_path"/>
+		<result property="parentId" column="parent_id"/>
+    </resultMap>
+    
+ 	<select id="queryFileByPage" resultMap="files-resultMap" parameterClass="java.util.HashMap">
+  		select * from tb_file
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotEmpty property="fileId"> 
+  				and file_id = #fileId#
+  			</isNotEmpty>
+  			<isNotEmpty property="fileName"> 
+  				and file_name = #fileName#
+  			</isNotEmpty>
+  			<isNotEmpty property="parentId"> 
+  				and parent_id = #parentId#
+  			</isNotEmpty>
+        </dynamic>
+ 	</select>
+ 	
+ 	 <!-- 类型添加 -->
+     <insert id="add" parameterClass="files"> 
+     	 insert into tb_file(file_name,online_path,parent_id) values (#fileName#,#onlinePath#,#parentId#)
+ 	 </insert>
+ 	 <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_file where parent_id=#glId#
+ 	 </delete>
+</sqlMap>

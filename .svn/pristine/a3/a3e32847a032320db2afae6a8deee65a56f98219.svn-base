@@ -1,0 +1,20 @@
+'use strict';
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-21 16:38:49
+ * @version $Id$
+ */
+
+//section最小高度
+var window_h = $(window).height();
+
+var section = $("section");
+
+var header_h = $("header").height();
+
+var article_h = $("article").height();
+
+var footer_h = $("footer").height();
+
+section.css("min-height",window_h - header_h - footer_h - article_h-20);

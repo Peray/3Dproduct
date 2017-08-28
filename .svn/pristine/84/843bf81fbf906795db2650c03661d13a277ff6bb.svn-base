@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="logsMap">
+    
+    <typeAlias alias="logs" type="com.eastdawn.po.Logs"/>
+    
+    <resultMap id="logs-resultMap" class="logs" >
+    	<result property="logId" column="log_Id"/>
+		<result property="userName" column="user_Name"/>
+		<result property="ip" column="ip"/>
+		<result property="time" column="time"/>
+		<result property="event" column="event"/>
+		<result property="times" column="times"/>
+    </resultMap>
+    
+    <select id="queryLogByPage"  resultMap="logs-resultMap" parameterClass="java.util.HashMap">
+ 		select * from tb_logs
+ 		<dynamic prepend="where">
+  				1=1  
+  			<isNotNull property="startTime"> 
+		  	<![CDATA[
+		  		and time >= #startTime# 
+		  	]]>
+		  	</isNotNull>	
+		  	<isNotNull property="endTime"> 
+			<![CDATA[
+				and time <= #endTime#
+			]]>	
+			</isNotNull> 	
+        </dynamic>
+         order by log_Id desc
+         <isNotEmpty property="numStart"> 
+			 LIMIT #numStart#,10
+		 </isNotEmpty>
+     </select>
+     
+     <select id="getLogCountByPage" resultClass="Long" parameterClass="java.util.HashMap">
+ 		select count(*) from tb_logs
+			<dynamic prepend="where">
+			    1=1
+	  			<isNotNull property="startTime"> 
+			  	<![CDATA[
+			  		and time >= #startTime# 
+			  	]]>
+			  	</isNotNull>	
+			  	<isNotNull property="endTime"> 
+				<![CDATA[
+					and time <= #endTime#
+				]]>	
+				</isNotNull>  	
+			</dynamic>
+ 	</select>
+ 	
+ 	 <!-- 日志添加 -->
+     <insert id="add" parameterClass="logs"> 
+	 	insert into tb_logs(user_Name,ip,time,event,times) values (#userName#,#ip#,#time#,#event#,#times#)
+ 	 </insert>
+ 	  <!-- 类型删除 -->
+ 	 <delete id="deleteById" parameterClass="Long">
+	 	delete from tb_logs where log_Id=#logId#
+ 	 </delete>
+ 	 
+ 	 <!-- 当天访问量 -->
+ 	 <select id="querySearchDaysByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select hour(time) as hour, count(1) as count from tb_logs where DATE_FORMAT(time,'%Y-%m-%d') = current_date() group by hour(time);  
+     </select>
+     <!-- 
+     	//每小时访问量
+		select * from tb_logs where hour(time)=11 and to_days(time)=to_days(curdate())
+      -->
+     <!-- 本周访问量 -->
+ 	 <select id="querySearchWeekByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select DATE_FORMAT(time,'%Y%m%d') days,count(1) count from tb_logs where YEARWEEK(date_format(time,'%Y-%m-%d')) = YEARWEEK(now()) group by days;
+     </select>
+     
+     <!-- 上周访问量 -->
+ 	 <select id="querySearchUpWeekByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select DATE_FORMAT(time,'%Y%m%d') days,count(1) count from tb_logs where YEARWEEK(date_format(time,'%Y-%m-%d')) = YEARWEEK(now())-1 group by days;
+     </select>
+     
+     <!-- 本月访问量 -->
+ 	 <select id="querySearchMonthByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select DATE_FORMAT(time,'%Y%m%d') days,count(1) count from tb_logs where month(time) = month(curdate()) and year(time) = year(curdate()) group by days;
+     </select>
+     
+     <!-- 上月访问量 -->
+ 	 <select id="querySearchUpMonthByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select DATE_FORMAT(time,'%Y%m%d') days,count(1) count from tb_logs where month(time) = month(curdate())-1 and year(time) = year(curdate()) group by days;
+     </select>
+     
+     <!-- 根据日期查询-->
+ 	 <select id="querySearchTimeByPage"  resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+		select DATE_FORMAT(time,'%Y%m%d') days,count(1) count From tb_logs Where 1=1
+			<isNotEmpty property="starTime"> 
+		  	<![CDATA[
+		  		and DATE_FORMAT(time,'%Y-%m-%d') >= #starTime#
+		  	]]>
+		  	</isNotEmpty>	  			
+		  	<isNotEmpty property="endTime"> 
+		  	<![CDATA[
+		  		and DATE_FORMAT(time,'%Y-%m-%d') <= #endTime#
+		  	]]>
+		  	</isNotEmpty>
+		   group by days;
+     </select>
+</sqlMap>

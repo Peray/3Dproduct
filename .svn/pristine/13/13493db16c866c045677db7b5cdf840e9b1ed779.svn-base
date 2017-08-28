@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>运维管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+	<script src="js/jquery-1.8.1.min.js"></script>
+	<script src="js/amazeui.min.js"></script>
+	<script src="js/echarts.min.js"></script>
+	<script src="js/jquery.tablesorter.min.js"></script>
+	<script src="js/jqPaginator.js"></script>
+	
+	<style>
+		table thead tr .header {
+			background-image: url(img/tablesorter/sort_both.png);
+			background-repeat: no-repeat;
+			background-position: center right;
+			cursor: pointer;
+		}
+		table thead tr .headerSortDown {
+			background-image: url(img/tablesorter/sort_asc.png);
+		}
+		table thead tr .headerSortUp {
+			background-image: url(img/tablesorter/sort_desc.png);
+		}
+	</style>
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+	
+	<div class="am-cf am-margin">
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<div class="am-cf">服务管理</div>
+				<div class="am-cf ">
+					<a href="add.html" class="am-fr am-btn am-btn-secondary am-radius"  target="main">
+						<i class="am-icon-plus"></i>增加
+					</a>
+				</div>
+				<table class="am-table am-table-bordered am-table-radius am-table-striped am-top" id="myTable3">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>服务名称</th>
+							<th>服务地址</th>
+							<th>描述</th>
+							<th>服务发布时间</th>
+							<th>发布人</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody class="neirong">
+
+					</tbody>
+				</table>
+				<ul class="am-pagination am-fr admin-content-pagination" id="pagination2">
+				</ul>
+			</div>
+		</div>
+		<div class="am-g am-top">
+			<div class="am-u-md-12">
+				<div class="am-cf">实时服务使用情况</div>
+				<div class=" am-cf">
+					<div class="am-btn-group am-btn-group-sm am-fr">
+						<button type="button" class="am-btn am-btn-primary">本年</button>
+						<button type="button" class="am-btn am-btn-primary">本月</button>
+						<button type="button" class="am-btn am-btn-primary">本周</button>
+					</div>
+				</div>
+				<div id="main1" style="width:90%;height:500px;"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 弹出框 -->
+	<div class="am-popup" id="my-popup">
+		<div class="am-popup-inner"></div>
+	</div>
+	
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	
+	<script src="js/app2.js"></script>
+	<script src="js/upload.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/ol.js"></script>
+	<script src="js/service.js"></script>
+	
+	<script>
+		$(document).ready(function(){
+			
+			$('#myTable3').tablesorter({
+				headers:{
+					1:{sorter:false},
+					2:{sorter:false},
+					3:{sorter:false},
+					5:{sorter:false},
+					6:{sorter:false}
+				}
+			})
+
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>运维管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+	<div class="am-cf am-padding">
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<div class="am-fl am-cf">实时在线用户</div>
+				<table class="am-table am-table-bd am-table-striped admin-content-table">
+					<thead>
+						<tr>
+							<th>编号</th>
+							<th>用户名称</th>
+							<th>上线时间</th>
+							<th>持续时长（时分秒）</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>John Clark</td>
+							<td>2016-09-08</td> 
+							<td>24：35：35</td>
+							<td>
+								<div class="am-dropdown" data-am-dropdown="">
+									<button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle="">
+										<span class="am-icon-cog"></span>
+										<span class="am-icon-caret-down"></span>
+									</button>
+									<ul class="am-dropdown-content">
+										<li><a href="#">1. 编辑</a></li>
+										<li><a href="#">2. 下载</a></li>
+										<li><a href="#">3. 删除</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>John Clark</td>
+							<td>2016-09-08</td> 
+							<td>24：35：35</td>
+							<td>
+								<div class="am-dropdown" data-am-dropdown="">
+									<button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle="">
+										<span class="am-icon-cog"></span>
+										<span class="am-icon-caret-down"></span>
+									</button>
+									<ul class="am-dropdown-content">
+										<li><a href="#">1. 编辑</a></li>
+										<li><a href="#">2. 下载</a></li>
+										<li><a href="#">3. 删除</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>John Clark</td>
+							<td>2016-09-08</td> 
+							<td>24：35：35</td>
+							<td>
+								<div class="am-dropdown" data-am-dropdown="">
+									<button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle="">
+										<span class="am-icon-cog"></span>
+										<span class="am-icon-caret-down"></span>
+									</button>
+									<ul class="am-dropdown-content">
+										<li><a href="#">1. 编辑</a></li>
+										<li><a href="#">2. 下载</a></li>
+										<li><a href="#">3. 删除</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<ul class="am-pagination am-fr admin-content-pagination">
+					<li class="am-disabled"><a href="#">«</a></li>
+					<li class="am-active"><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">5</a></li>
+					<li><a href="#">»</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="am-g am-top">
+			<div class="am-u-md-6">
+				<div class="am-fl am-cf">实时服务使用情况</div>
+				<div id="main" style="height:500px;"></div>
+			</div>
+			<div class="am-u-md-6">
+				<div class="am-fl am-cf">服务器运行时间源</div>
+			</div>
+		</div>
+	</div>
+
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	<!--[if (gte IE 9)|!(IE)]><!-->
+		<script src="js/jquery-1.8.1.min.js"></script>
+	<!--<![endif]-->
+	<script src="js/amazeui.min.js"></script>
+	<script src="js/echarts.min.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>

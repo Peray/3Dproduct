@@ -1,0 +1,426 @@
+$(window).load(function() {
+	getdata(1,true);
+});
+
+$('.input-r').click(function() {
+	searchData(1,true);
+});
+var name,val;
+function categoryCx(k,v) {
+	name = k;
+	val = v;
+	searchCategory(1,true);
+}
+
+var rp = 10;
+
+//加载管理信息
+function getdata(page,b){
+	$.ajax({
+		type:'post',
+		url: 'gl!execute.action',
+		dataType: 'json',
+		data: { statr: page,rp:rp},
+		success:function(ret){
+			ret = eval(ret);
+			var div = "";
+			totalitems = ret.num;
+			$("#searKey").html("共"+totalitems+"条记录");
+			if (totalitems == 0) {
+				div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+			}else{
+				for (var i = 0; i < ret.list.length; i++) {
+					var date = new Date(ret.list[i].fbTime.time);
+							Y = date.getFullYear() + '-';
+							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							D = date.getDate();
+					div += '<figure class="clearfix"><img src="img/pic2_30.png" alt="标签" title="标签" onclick="detail('+ret.list[i].glId+')"/><figcaption>'+
+								'<p><strong>服务名称：</strong><span>'+ret.list[i].glName+'</span></p>'+
+								'<p><strong>描述：</strong><span>'+ret.list[i].content+'</span></p>'+
+								'<p><strong>发布人：</strong><span>狄娜</span></p>'+
+								'<p><strong>发布时间：</strong><span>'+Y+M+D+'</span><span class="skim">4343浏览</span></p>'+
+								'</figcaption></figure>'
+				}
+			}
+			$(".listService").html(div);
+
+			if(b){
+				initPage(totalitems);
+			}
+			
+		},
+		error: function(ret, ret1, ret2) {
+			debugger;
+		}
+	})
+};
+
+//分页
+function initPage(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+			getdata(num,false);
+			}
+		});
+	}
+}
+
+//根据关键字查询
+function searchData(page,b){
+	var key = $('#key').val();
+	$.ajax({
+	        type: "post",
+	        url: "gl!searchKey.action", //url, //
+	        data: {"statr": page,"info":key},
+	        dataType: "json",
+	        success: function (ret) {
+	 			ret = eval(ret);
+				var div = "";
+				pageNum = ret.num;
+				$("#searKey").html("关键字"+key+"的内容，共检出"+pageNum+"条记录");
+				if (pageNum == 0) {
+					div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+				}else{
+					for (var i = 0; i < ret.list.length; i++) {
+						var date = new Date(ret.list[i].fbTime.time);
+							Y = date.getFullYear() + '-';
+							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							D = date.getDate();
+							var nameRed = "<span style='color:#e80707;'>" + key + "</span>";
+							dataNAME = ret.list[i].glName.replace(key, nameRed);
+							dataCONTENT = ret.list[i].content.replace(key, nameRed);
+
+						div += '<figure class="clearfix"><img src="img/pic2_30.png" alt="标签" title="标签" onclick="detail('+ret.list[i].glId+')" /><figcaption>'+
+									'<p><strong>服务名称：</strong><span>'+dataNAME+'</span></p>'+
+									'<p><strong>描述：</strong><span>'+dataCONTENT+'</span></p>'+
+									'<p><strong>发布人：</strong><span>狄娜</span></p>'+
+									'<p><strong>发布时间：</strong><span>'+Y+M+D+'</span><span class="skim">4343浏览</span></p>'+
+									'</figcaption></figure>'
+					}
+				}
+				$(".listService").html(div);
+				if(b){
+					initPages(pageNum);
+				}
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+}
+
+//分页
+function initPages(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+			searchData(num,false);
+			}
+		});
+	}
+}
+
+
+$('aside').on('click', ".list-item li",function(){
+	$(this).addClass('active').siblings("li").removeClass('active');
+})
+
+
+
+
+function xila(id){
+
+	if($(".fh"+id).text() == "∨"){
+
+		$(".fh"+id).siblings("ul").children('li').not(".show").show();
+
+		$(".fh"+id).text("∧");
+
+	}else if($(".fh"+id).text() == "∧"){
+
+		$(".fh"+id).siblings("ul").children('li').not(".show").hide();
+
+		$(".fh"+id).text("∨");
+		
+	}
+}
+
+
+//l列表查询
+function searchCategory(page,b){
+	$.ajax({
+	        type: "post",
+	        url: "gl!categorySearch.action", //url, //
+	        data: {"statr": page,"type":name,"val":val},
+	        dataType: "json",
+	        success: function (ret) {
+	 			ret = eval(ret);
+				var div = "";
+				pageNum = ret.num;
+				$("#searKey").html("根据"+val+"分类，共检出"+pageNum+"条记录");
+				if (pageNum == 0) {
+					div += '<tr><td colSpan="7">没有查询到相关数据！</td></tr>';
+				}else{
+					for (var i = 0; i < ret.list.length; i++) {
+						var date = new Date(ret.list[i].fbTime.time);
+								Y = date.getFullYear() + '-';
+								M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+								D = date.getDate();
+						div += '<figure class="clearfix"><img src="img/pic2_30.png" alt="标签" title="标签" onclick="detail('+ret.list[i].glId+')" /><figcaption>'+
+									'<p><strong>服务名称：</strong><span>'+ret.list[i].glName+'</span></p>'+
+									'<p><strong>描述：</strong><span>'+ret.list[i].content+'</span></p>'+
+									'<p><strong>发布人：</strong><span>狄娜</span></p>'+
+									'<p><strong>发布时间：</strong><span>'+Y+M+D+'</span><span class="skim">4343浏览</span></p>'+
+									'</figcaption></figure>'
+					}
+				}
+				$(".listService").html(div);
+				if(b){
+					initPagec(pageNum);
+				}
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+}
+function initPagec(totalitems) {
+	if (totalitems > 0) {
+		$.jqPaginator('#pagination2', {
+			totalPages: Math.ceil(totalitems/rp),
+			visiblePages: 10,
+			currentPage: 1,
+			activeClass:'am-active',
+			disableClass:'am-disabled',
+			prev: '<li class="prev"><a href="javascript:;">«</a></li>',
+			next: '<li class="next"><a href="javascript:;">»</a></li>',
+			page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+			onPageChange:function(num,type){
+			searchCategory(num,false);
+			}
+		});
+	}
+}
+
+
+
+//详细信息
+var glNumber,glName,glId;
+function detail(id){
+	$.ajax({
+	        type: "post",
+	        url: "gl!detail.action", //url, //
+	        data: {"glId":id},
+	        dataType: "json",
+	        success: function (ret) {
+	 			ret = eval(ret);
+				var div = "";
+
+				glNumber = ret.list[0].glNumber;
+				glName = ret.list[0].glName;
+				glId = ret.list[0].glId;
+
+				var date = new Date(ret.list[0].fbTime.time);
+				Y = date.getFullYear() + '-';
+				M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+				D = (date.getDate() < 10 ? '0'+( date.getDate()) :  date.getDate());
+
+				div+=	'<p class="list">'+
+							'<span style="vertical-align:top;">服务展示</span>'+
+							'<span style="width:380px;height:300px;" id="dituContent"></span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务编号</span>'+
+							'<span>'+ret.list[0].glNumber+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务名称</span>'+
+							'<span>'+ret.list[0].glName+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务发布时间</span>'+
+							'<span>'+Y+M+D+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>描述</span>'+
+							'<span>'+ret.list[0].content+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务名称</span>'+
+							'<span>'+ret.metaList[0].dataName+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>方位描述</span>'+
+							'<span>'+ret.metaList[0].fwContent+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>地理信息坐标</span>'+
+							'<span>'+ret.metaList[0].zdx+'</span>'+
+						'</p>'+
+						'<p class="list">'+
+							'<span></span>'+
+							'<span>'+ret.metaList[0].zdy+'</span>'+
+						'</p>'+
+						'<p class="list">'+
+							'<span></span>'+
+							'<span>'+ret.metaList[0].zxx+'</span>'+
+						'</p>'+
+						'<p class="list">'+
+							'<span></span>'+
+							'<span>'+ret.metaList[0].zxy+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务类型</span>'+
+							'<span>'+ret.metaList[0].fwlx+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>分辨率</span>'+
+							'<span>'+ret.metaList[0].fbl+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>卫星类型</span>'+
+							'<span>'+ret.metaList[0].wxlx+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>服务生成时间</span>'+
+							'<span>'+ret.metaList[0].yxNewTime+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>时相</span>'+
+							'<span>'+ret.metaList[0].sx+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>来源</span>'+
+							'<span>'+ret.metaList[0].yxSource+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>原始影像采集单位</span>'+
+							'<span>'+ret.metaList[0].yxcjdw+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像处理单位</span>'+
+							'<span>'+ret.metaList[0].yxcldw+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像审定者</span>'+
+							'<span>'+ret.metaList[0].yxsdr+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像审定单位</span>'+
+							'<span>'+ret.metaList[0].yxsdr+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>影像审定时间</span>'+
+							'<span>'+ret.metaList[0].yxsdsj+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>数据密集</span>'+
+							'<span>'+ret.metaList[0].sjmj+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>知识产权归属</span>'+
+							'<span>'+ret.metaList[0].cqgs+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>审核人</span>'+
+							'<span>'+ret.metaList[0].shPop+'</span>'+
+						'</p>'+
+
+						'<p class="list">'+
+							'<span>审核时间</span>'+
+							'<span>'+ret.metaList[0].shTime+'</span>'+
+						'</p>';
+				$(".peray-body").html(div);
+				loadBaiduMap(ret.list[0].address);
+			},
+	        error: function (ret, ret1, ret2) {
+	            debugger;
+	        }
+	   });
+	$("body").addClass("peray-open").css("padding-right","17px");
+	$("#myPeray").show();
+	var timer = setTimeout(function(){
+		$("#myPeray").addClass("in");
+		clearTimeout(timer);
+	},0);
+}
+
+
+$(document).on('click',function(e){
+	if(e.target.className == 'e'|| e.target.id == 'myPeray'){
+		$("body").removeClass("peray-open").css("padding-right","0px");
+		$("#myPeray").removeClass("in");
+		var timer = setTimeout(function(){
+			$("#myPeray").hide();
+			clearTimeout(timer);
+		},0);
+	}
+})
+
+
+
+
+ //定制我的资源
+ $("#Customized").on('click',function(){
+ 	$.ajax({
+ 		url: 'myService!add.action',
+ 		type: 'POST',
+ 		dataType: 'json',
+ 		data: {
+ 			'serviceNumber':glNumber,
+ 			'serviceName':glName,
+ 			'parentId':glId
+ 		},
+ 		success:function(ret){
+ 			$("body").removeClass("peray-open").css("padding-right","0px");
+ 			$("#myPeray").removeClass("in");
+ 			var timer = setTimeout(function(){
+ 				$("#myPeray").hide();
+ 				clearTimeout(timer);
+ 				alert("定制成功！")
+ 			},0);
+ 		},
+ 		error: function (ret, ret1, ret2) {
+            debugger;
+        }
+ 	});
+
+ })

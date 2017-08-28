@@ -1,0 +1,5 @@
+my=src/config/config.properties
+onlineBasePath=http://127.0.0.1:81/share/root
+onlineAbsolutePath=D:/kfrj/tomcat-6.0/apache-tomcat-6.0.26/webapps/share/root
+absoluteBasePath=d:/share
+mysqljdbc=jdbc:mysql://192.168.10.210:8066/TESTDB

@@ -1,0 +1,67 @@
+<!doctype html>
+<html class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>运维管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+	<style>
+		.active{
+			background-color:#E4E4E4;
+		}
+	</style>
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+	<div class="admin-offcanvas-bar">
+		<ul class="am-list admin-sidebar-list">
+			<li>
+				<a href="real-time.html" target="main">
+					<span class="am-icon-home"></span> 实时展现
+				</a>
+			</li>
+			<li>
+				<a href="Service-manag.html" target="main">
+					<span class="am-icon-chain"></span> 服务管理
+				</a>
+			</li>
+			<li>
+				<a href="category.html" target="main">
+					<span class="am-icon-table"></span> 字典管理
+				</a>
+			</li>
+			<li>
+				<a href="item-user.html" target="main">
+					<span class="am-icon-pencil-square-o"></span> 用户管理
+				</a>
+			</li>
+			<li>
+				<a href="sigin-in.html" target="main">
+					<span class="am-icon-sign-out"></span> 登录日志
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	<!--[if (gte IE 9)|!(IE)]><!-->
+		<script src="js/jquery-1.8.1.min.js"></script>
+	<!--<![endif]-->
+	<script src="js/amazeui.min.js"></script>
+	<script>
+		var $li = $("ul.am-list admin-sidebar-list li a");
+		$li.click(function() {
+			$(this).addClass('active').siblings().removeClass('active');
+		});
+	</script>
+</body>
+</html>

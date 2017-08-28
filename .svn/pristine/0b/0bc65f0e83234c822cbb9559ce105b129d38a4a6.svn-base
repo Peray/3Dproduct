@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>运维管理</title>
+</head>
+	<frameset rows="162,*" frameborder="1" border="1" framespacing="0">
+		<frame src="top1.html" frameborder="0" border="0" framespacing="0" name="top" marginwidth="0" marginheight="0" scrolling="no" noresize="noresize"/>
+		<frameset cols="246,*">
+			<frame src="left.html" frameborder="2" border="2" framespacing="0" name="left" marginwidth="0" marginheight="0"  scrolling="no" noresize="noresize" />
+			<frame src="real-time.html" frameborder="2" border="2" framespacing="0" name="main" marginwidth="0" marginheight="0" scrolling="auto" />
+		</frameset>
+	</frameset>
+	<noframes> 
+		<body> 
+			很抱歉，馈下使用的浏览器不支援框架功能，请转用新的浏览器。 
+		</body>
+	</noframes>
+</html>

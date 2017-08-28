@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>增加新用户</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/amazeui.min.css"/>
+	<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+	<!--[if lte IE 9]>
+		<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>以获得更好的体验！</p>
+	<![endif]-->
+
+	<div class="admin-content-body">
+		<div class="am-cf am-margin">
+			<div class="am-g">
+				<div class="am-u-sm-12">
+					<form class="am-form am-form-horizontal" id="addForm">
+						<fieldset>
+							<legend>增加新用户</legend>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-num-1">用户登录名</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="logName" name="logName" placeholder="登录名称" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">密码</label>
+								<div class="am-u-sm-8">
+									<input type="password" id="logPwd" name="logPwd" placeholder="登录密码" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+							
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">请再次输入密码</label>
+								<div class="am-u-sm-8">
+									<input type="password" id="checkpwd" name="checkpwd" placeholder="登录密码" required data-equal-to="#logPwd">
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-cjdw-1">部门</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="department" name="department" placeholder="请输入部门" required>
+								</div>
+								<span class="am-u-sm-1"></span>
+							</div>
+							
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">中文名</label>
+								<div class="am-u-sm-8">
+									<input type="text" id="cName" name="cName" placeholder="中文名" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+							
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-ipt-name-1">邮箱</label>
+								<div class="am-u-sm-8">
+									<input type="email" id="email" name="email" placeholder="用户邮箱" required>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+							
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label" for="doc-data-type-1">用户权限</label>
+								<div class="am-u-sm-8">
+									<select id="level" name="level" required>
+										<option value="">请选择</option>
+										<option value="1">普通用户</option>
+										<option value="2">高级用户</option>
+										<option value="3">管理员</option>
+									</select>
+									<span class="am-form-caret"></span>
+								</div>
+								<span class="am-u-sm-1 am-text-left am-padding-left-0 top-red">*</span>
+							</div>
+							<br>
+							<p class="am-text-center"><button type="submit" class="am-btn am-btn-primary">保存修改</button></p>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--[if lt IE 9]>
+		<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+		<script src="js/amazeui.ie8polyfill.min.js"></script>
+	<![endif]-->
+
+	<!--[if (gte IE 9)|!(IE)]><!-->
+		<script src="js/jquery-1.8.1.min.js"></script>
+	<!--<![endif]-->
+	<script src="js/amazeui.min.js"></script>
+	<script src="js/adminUser.js"></script>
+</body>
+</html>

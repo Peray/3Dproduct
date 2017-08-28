@@ -1,0 +1,28 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors peray (you@example.org)
+ * @date    2017-06-26 09:25:28
+ * @version $Id$
+ */
+
+
+ .login{
+ 	width:400px;
+ 	margin:auto;
+ 	padding-top:100px;
+ }
+ .login>p{
+ 	padding:20px 0;
+ }
+ .login>p>input{
+ 	width:390px;
+	border:1px solid #115a9f;
+	line-height:40px;
+	font-size:18px;
+	padding-left:10px;
+	box-sizing: border-box;
+}
+.ve-code>input:first-child{
+	width:300px;
+}
